@@ -1,20 +1,16 @@
-using UnityEngine;
 using Photon.Pun;
+using UnityEngine;
 
-public class SpawnPlayers: MonoBehaviour
+public class SpawnPlayers : MonoBehaviour
 {
     public GameObject player;
     public float minX;
     public float maxX;
-    public float minY;
-    public float maxY;
-    void Start()
-    {
-        Vector2 randomPosition = new Vector2(Random.Range(minX, maxX),Random.Range(minY, maxY));
-    }
 
-    void Update()
+    private void Start()
     {
-        
+        Vector2 spawnPosition = new Vector2(Random.Range(minX, maxX), 0);
+        PhotonNetwork.Instantiate(player.name, spawnPosition, Quaternion.identity);
     }
 }
+
