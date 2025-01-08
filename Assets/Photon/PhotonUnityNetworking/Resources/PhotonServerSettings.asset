@@ -40,6 +40,9 @@ MonoBehaviour:
   - Fire
   - RespawnSpaceship
   - UpdateScore
+  - SlowEnemyAbility
+  - ReverseControlAbility
+  - BlindEnemyAbility
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
