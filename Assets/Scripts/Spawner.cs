@@ -6,7 +6,7 @@ using Photon.Pun;
 public class Spawner : MonoBehaviourPun
 {
     [Header("References")]
-    public GameObject defaultPrefab, jumperPrefab, movedPrefab;
+    public GameObject defaultPrefab, jumperPrefab, movedPrefab,cyclePrefab,collectAbilityPrefab;
     private GameObject selectedPrefab;
 
     [Header("Values")]
@@ -39,7 +39,7 @@ public class Spawner : MonoBehaviourPun
         {
             for (int i = 0; i < platformCount; i++)
             {
-                randomNumber = Random.Range(0, 18);
+                randomNumber = Random.Range(0, 30);
                 switch (randomNumber)
                 {
                     case 1:
@@ -48,6 +48,9 @@ public class Spawner : MonoBehaviourPun
                         break;
                     case 3:
                         selectedPrefab = movedPrefab;
+                        break;
+                    case 4:
+                        selectedPrefab = cyclePrefab;
                         break;
                     default:
                         selectedPrefab = defaultPrefab;
@@ -58,9 +61,22 @@ public class Spawner : MonoBehaviourPun
                 spawnLocate.y += Random.Range(minimumY, maximumY);
 
                 GameObject platform = Instantiate(selectedPrefab, spawnLocate, Quaternion.identity);
+                if (randomNumber <= 1)
+                {
+                    SpawnAbilityOnPlatform(platform);
+
+                }
                 yield return new WaitForSeconds(0.5f); 
             }
         }
+    }
+
+    private void SpawnAbilityOnPlatform(GameObject platform)
+    {
+        Vector3 coinSpawnPosition = platform.transform.position;
+        coinSpawnPosition.y += .7f; 
+
+        Instantiate(collectAbilityPrefab, coinSpawnPosition, Quaternion.identity);
     }
 }
 

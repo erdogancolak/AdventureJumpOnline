@@ -22,7 +22,6 @@ public class MainMenuController: MonoBehaviourPunCallbacks
             RoomOptions roomOptions = new RoomOptions();
             roomOptions.MaxPlayers = maxPlayer;
             PhotonNetwork.CreateRoom(createInput.text, roomOptions);
-            Debug.Log(PhotonNetwork.NickName + " Create A Room");
         }
         else
         {
@@ -35,7 +34,6 @@ public class MainMenuController: MonoBehaviourPunCallbacks
         if(!string.IsNullOrEmpty(nicknameInput.text))
         {
             PhotonNetwork.JoinRoom(joinInput.text);
-            Debug.Log(PhotonNetwork.NickName + " Joined A Room");
         }
         else
         {

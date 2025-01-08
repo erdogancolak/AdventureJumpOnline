@@ -267,6 +267,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jumpPower: 12
+  destroyFloat: 30
+  isCyclePlatforms: 0
 --- !u!1 &252840980
 GameObject:
   m_ObjectHideFlags: 0
@@ -314,7 +316,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &363369573
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -330,8 +332,10 @@ MonoBehaviour:
   defaultPrefab: {fileID: 2919388992624922782, guid: 12d05789a1c2df144a5720761ffa1bb3, type: 3}
   jumperPrefab: {fileID: 2919388992624922782, guid: 86c74c7db5a8f3f49b463eb82e69c73e, type: 3}
   movedPrefab: {fileID: 8653445776443457448, guid: 137b1267371c0004da9266bfcae1b566, type: 3}
+  cyclePrefab: {fileID: 2919388992624922782, guid: 30f94f718de78944f855983e19b4d0d2, type: 3}
+  collectAbilityPrefab: {fileID: 361206406461094186, guid: 13068dd0032464d4cb08310ec0ecec46, type: 3}
   platformCount: 10
-  XValueChange: 1
+  XValueChange: 2.4
   minimumY: 2
   maximumY: 2
 --- !u!4 &363369574
@@ -410,8 +414,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 2624200308779640046, guid: 9dfa89b39a1cd304faf8cf24394a59a0, type: 3}
-  minX: 2.5
-  maxX: -2.5
+  minX: 0.2
+  maxX: -0.2
 --- !u!4 &692715558
 Transform:
   m_ObjectHideFlags: 0
