@@ -1,38 +1,66 @@
-using Photon.Pun;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class Spawner : MonoBehaviour
+public class Spawner : MonoBehaviourPun
 {
-    public GameObject platformPrefab;
-    Vector3 spawnLocate;
+    [Header("References")]
+    public GameObject defaultPrefab, jumperPrefab, movedPrefab;
+    private GameObject selectedPrefab;
 
-
+    [Header("Values")]
     [SerializeField] private int platformCount;
     [SerializeField] private float XValueChange;
     [SerializeField] private float minimumY, maximumY;
+
+    private Vector3 spawnLocate;
+    private int randomNumber;
+
     void Start()
     {
-        
-    }
+        for (int i = 0; i < platformCount; i++)
+        {
+            selectedPrefab = defaultPrefab;
+            spawnLocate.x = Random.Range(-XValueChange, XValueChange);
+            spawnLocate.y += Random.Range(minimumY, maximumY);
 
-    // Update is called once per frame
-    void Update()
-    {
-        platformSpawner();
+            GameObject platform = Instantiate(selectedPrefab, spawnLocate, Quaternion.identity);
+        }
+        if (PhotonNetwork.IsMasterClient)
+        {
+            StartCoroutine(PlatformSpawner());
+        }
     }
-    private void platformSpawner()
+      
+    IEnumerator PlatformSpawner()
     {
-            Vector2 newScale = new Vector2();
-
+        while (true) 
+        {
             for (int i = 0; i < platformCount; i++)
             {
-                newScale.x = Random.Range(0.9f, 1.1f);
-                transform.localScale = newScale;
+                randomNumber = Random.Range(0, 18);
+                switch (randomNumber)
+                {
+                    case 1:
+                    case 2:
+                        selectedPrefab = jumperPrefab;
+                        break;
+                    case 3:
+                        selectedPrefab = movedPrefab;
+                        break;
+                    default:
+                        selectedPrefab = defaultPrefab;
+                        break;
+                }
 
                 spawnLocate.x = Random.Range(-XValueChange, XValueChange);
                 spawnLocate.y += Random.Range(minimumY, maximumY);
 
-                Instantiate(platformPrefab, spawnLocate, Quaternion.identity);
+                GameObject platform = Instantiate(selectedPrefab, spawnLocate, Quaternion.identity);
+                yield return new WaitForSeconds(0.5f); 
             }
         }
+    }
 }
+

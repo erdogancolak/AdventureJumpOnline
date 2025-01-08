@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6013736995634724647}
   - component: {fileID: 8446311473815945258}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PlayerModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 4990889707929842110}
   - component: {fileID: 7089680175992126244}
   - component: {fileID: -9028032448506175238}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -257,6 +257,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 10
+  playerModel: {fileID: 522684985292980067}
 --- !u!114 &-9028032448506175238
 MonoBehaviour:
   m_ObjectHideFlags: 0

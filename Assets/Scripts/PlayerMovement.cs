@@ -5,11 +5,17 @@ public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed;
 
+    public GameObject playerModel;
+
     PhotonView view;
 
     void Start()
     {
         view = GetComponent<PhotonView>();
+        if(view.IsMine)
+        {
+            playerModel.GetComponent<SpriteRenderer>().color = Color.red;
+        }
     }
 
     void Update()
