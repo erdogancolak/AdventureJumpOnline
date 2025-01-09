@@ -43,6 +43,11 @@ MonoBehaviour:
   - SlowEnemyAbility
   - ReverseControlAbility
   - BlindEnemyAbility
+  - ShieldPlayerAbility
+  - Rocket
+  - RocketAbility
+  - MuchSpeedAbility
+  - InvinsibleAbility
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

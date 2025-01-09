@@ -14,6 +14,17 @@ public class PlayerAbility : MonoBehaviour
     public float slowEffectTime;
     [Space]
     public float reverseControlEffectTime;
+    [Space]
+    public float shieldEffectTime;
+    public bool isShieldActive;
+    [Space]
+    public float RocketEffectTime;
+    public float RocketPower;
+    [Space]
+    public float MuchSpeedEffectTime;
+    [Space]
+    public float InvinsibleEffectTime;
+    Sprite playerModelSprite;
     
     private void Awake()
     {
@@ -21,8 +32,8 @@ public class PlayerAbility : MonoBehaviour
     }
     void Start()
     {
-        Ability = "BlindEnemy";
-        
+        Ability = "Null";
+        playerModelSprite = transform.GetChild(0).GetComponent<SpriteRenderer>().sprite;
     }
 
     void Update()
@@ -46,6 +57,18 @@ public class PlayerAbility : MonoBehaviour
             case "ReverseControlEnemy":
                 photonView.RPC("ReverseControlAbility", RpcTarget.All);
                 break;
+            case "ShieldPlayer":
+                photonView.RPC("ShieldPlayerAbility", RpcTarget.All);
+                break;
+            case "Rocket":
+                photonView.RPC("RocketAbility", RpcTarget.All);
+                break;
+            case "MuchSpeed":
+                photonView.RPC("MuchSpeedAbility", RpcTarget.All);
+                break;
+            case "Invinsible":
+                photonView.RPC("InvinsibleAbility", RpcTarget.All);
+                break;
             default:
                 Debug.Log("Ability = " + Ability);
                 break;
@@ -55,13 +78,13 @@ public class PlayerAbility : MonoBehaviour
     [PunRPC]
     private void BlindEnemyAbility()
     {
-        if(!photonView.IsMine)
+        if (!photonView.IsMine && !isShieldActive)
         {
-            StartCoroutine(ApplyBlindEffect());
+            StartCoroutine(ApplyBlindEnemyEffect());
         }
     }
 
-    IEnumerator ApplyBlindEffect()
+    IEnumerator ApplyBlindEnemyEffect()
     {
         Ability = null;
         GameObject blindPanel1 = new GameObject("BlindPanel1");
@@ -94,12 +117,12 @@ public class PlayerAbility : MonoBehaviour
     [PunRPC]
     private void SlowEnemyAbility()
     {
-        if (!photonView.IsMine)
+        if (!photonView.IsMine && !isShieldActive)
         {
-            StartCoroutine(ApplySlowEnemy());
+            StartCoroutine(ApplySlowEnemyEffect());
         }
     }
-    IEnumerator ApplySlowEnemy()
+    IEnumerator ApplySlowEnemyEffect()
     {
         Ability = null;
         PlayerMovement movement = GetComponent<PlayerMovement>();
@@ -118,12 +141,12 @@ public class PlayerAbility : MonoBehaviour
     [PunRPC]
     private void ReverseControlAbility()
     {
-        if (!photonView.IsMine)
+        if (!photonView.IsMine && !isShieldActive)
         {
-            StartCoroutine(ApplyReverseControlEnemy());
+            StartCoroutine(ApplyReverseControlEnemyEffect());
         }
     }
-    IEnumerator ApplyReverseControlEnemy()
+    IEnumerator ApplyReverseControlEnemyEffect()
     {
         PlayerMovement movement = GetComponent<PlayerMovement>();
         if(movement != null)
@@ -135,6 +158,99 @@ public class PlayerAbility : MonoBehaviour
 
             movement.moveSpeed = originalSpeed;
         }
+    }
+    #endregion
+    #region ShieldPlayer
+    [PunRPC]
+    private void ShieldPlayerAbility()
+    {   
+        if(photonView.IsMine)
+        {
+            StartCoroutine(ApplyShieldPlayerEffect());
+        }
+    }
+    IEnumerator ApplyShieldPlayerEffect()
+    {
+        Ability = null;
+        isShieldActive = true;
+
+        yield return new WaitForSeconds(shieldEffectTime);
+
+        isShieldActive = false;
+    }
+    #endregion
+    #region Rocket
+    [PunRPC]
+    private void RocketAbility()
+    {
+        if (photonView.IsMine)
+        {
+            StartCoroutine(ApplyRocketAbilityEffect());
+        }
+    }
+    IEnumerator ApplyRocketAbilityEffect()
+    {
+        Ability = null;
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        if(rb != null)
+        {
+            float originalGravity = rb.gravityScale;
+            Vector2 originalVelocity = rb.linearVelocity;
+
+            rb.gravityScale = 0;
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x,RocketPower);
+
+            yield return new WaitForSeconds(RocketEffectTime);
+
+            rb.gravityScale = originalGravity;
+            rb.linearVelocity = originalVelocity;
+        }
+    }
+    #endregion
+    #region MuchSpeed
+    [PunRPC]
+    private void MuchSpeedAbility()
+    {
+        if (!photonView.IsMine)
+        {
+            StartCoroutine(ApplyMuchSpeedAbility());
+        }
+    }
+    IEnumerator ApplyMuchSpeedAbility()
+    {
+        Ability = null;
+
+        PlayerMovement playerMovement = GetComponent<PlayerMovement>();
+        if(playerMovement != null)
+        {
+            float originalSpeed = playerMovement.moveSpeed;
+            playerMovement.moveSpeed *= 3f;
+
+            yield return new WaitForSeconds(MuchSpeedEffectTime);
+            
+            playerMovement.moveSpeed = originalSpeed;
+        }
+    }
+    #endregion
+    #region Invinsible
+    [PunRPC]
+    private void InvinsibleAbility()
+    {
+        if (!photonView.IsMine)
+        {
+            StartCoroutine(ApplyInvinsibleAbilityEffect());
+        }
+    }
+    IEnumerator ApplyInvinsibleAbilityEffect()
+    {
+        Ability = null;
+
+        GameObject playerModel = transform.GetChild(0).gameObject;
+        playerModel.GetComponent<SpriteRenderer>().sprite = null;
+
+        yield return new WaitForSeconds(InvinsibleEffectTime);
+
+        playerModel.GetComponent<SpriteRenderer>().sprite = playerModelSprite;
     }
     #endregion
 }

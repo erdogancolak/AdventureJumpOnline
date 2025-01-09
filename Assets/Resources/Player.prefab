@@ -289,6 +289,12 @@ MonoBehaviour:
   blindEffectTime: 5
   slowEffectTime: 10
   reverseControlEffectTime: 10
+  shieldEffectTime: 10
+  isShieldActive: 0
+  RocketEffectTime: 2.2
+  RocketPower: 17
+  MuchSpeedEffectTime: 5
+  InvinsibleEffectTime: 10
 --- !u!1 &6424921668003525835
 GameObject:
   m_ObjectHideFlags: 0
