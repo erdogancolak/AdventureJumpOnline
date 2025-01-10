@@ -2,11 +2,13 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
+using TMPro;
 
 public class PlayerAbility : MonoBehaviour
 {
     PhotonView photonView;
     [HideInInspector] public string Ability;
+    private TMP_Text abilityNameText;
 
     [Header("Effects")]
     public float blindEffectTime;
@@ -32,8 +34,10 @@ public class PlayerAbility : MonoBehaviour
     }
     void Start()
     {
-        Ability = "Null";
+        Ability = "BlindEnemy";
         playerModelSprite = transform.GetChild(0).GetComponent<SpriteRenderer>().sprite;
+        abilityNameText = transform.Find("PlayerModel/UICanvas/AbilityNameText")?.GetComponent<TMP_Text>();
+        
     }
 
     void Update()
@@ -70,7 +74,7 @@ public class PlayerAbility : MonoBehaviour
                 photonView.RPC("InvinsibleAbility", RpcTarget.All);
                 break;
             default:
-                Debug.Log("Ability = " + Ability);
+                return;
                 break;
         }
     }
@@ -78,18 +82,19 @@ public class PlayerAbility : MonoBehaviour
     [PunRPC]
     private void BlindEnemyAbility()
     {
-        if (!photonView.IsMine && !isShieldActive)
-        {
+        //if (!photonView.IsMine && !isShieldActive)
+        //{
             StartCoroutine(ApplyBlindEnemyEffect());
-        }
+        //}
     }
 
     IEnumerator ApplyBlindEnemyEffect()
     {
         Ability = null;
+       
         GameObject blindPanel1 = new GameObject("BlindPanel1");
         GameObject blindPanel2 = new GameObject("BlindPanel2");
-        Canvas canvas = FindObjectOfType<Canvas>(); 
+        Canvas canvas = transform.Find("BlindEffectCanvas").GetComponent<Canvas>();
         if (canvas != null)
         {
             blindPanel1.transform.SetParent(canvas.transform, false);
@@ -125,6 +130,11 @@ public class PlayerAbility : MonoBehaviour
     IEnumerator ApplySlowEnemyEffect()
     {
         Ability = null;
+        if (abilityNameText != null)
+        {
+            abilityNameText.text = Ability;
+
+        }
         PlayerMovement movement = GetComponent<PlayerMovement>();
         if(movement != null)
         {
@@ -148,6 +158,12 @@ public class PlayerAbility : MonoBehaviour
     }
     IEnumerator ApplyReverseControlEnemyEffect()
     {
+        Ability = null;
+        if (abilityNameText != null)
+        {
+            abilityNameText.text = Ability;
+
+        }
         PlayerMovement movement = GetComponent<PlayerMovement>();
         if(movement != null)
         {
@@ -172,6 +188,11 @@ public class PlayerAbility : MonoBehaviour
     IEnumerator ApplyShieldPlayerEffect()
     {
         Ability = null;
+        if (abilityNameText != null)
+        {
+            abilityNameText.text = Ability;
+
+        }
         isShieldActive = true;
 
         yield return new WaitForSeconds(shieldEffectTime);
@@ -191,6 +212,11 @@ public class PlayerAbility : MonoBehaviour
     IEnumerator ApplyRocketAbilityEffect()
     {
         Ability = null;
+        if (abilityNameText != null)
+        {
+            abilityNameText.text = Ability;
+
+        }
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         if(rb != null)
         {
@@ -219,7 +245,11 @@ public class PlayerAbility : MonoBehaviour
     IEnumerator ApplyMuchSpeedAbility()
     {
         Ability = null;
+        if (abilityNameText != null)
+        {
+            abilityNameText.text = Ability;
 
+        }
         PlayerMovement playerMovement = GetComponent<PlayerMovement>();
         if(playerMovement != null)
         {
@@ -244,7 +274,11 @@ public class PlayerAbility : MonoBehaviour
     IEnumerator ApplyInvinsibleAbilityEffect()
     {
         Ability = null;
+        if (abilityNameText != null)
+        {
+            abilityNameText.text = Ability;
 
+        }
         GameObject playerModel = transform.GetChild(0).gameObject;
         playerModel.GetComponent<SpriteRenderer>().sprite = null;
 
