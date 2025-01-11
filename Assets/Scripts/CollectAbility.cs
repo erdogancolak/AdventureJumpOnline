@@ -1,14 +1,21 @@
+using Photon.Pun;
+using System.Collections;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CollectAbility : MonoBehaviour
 {
+    [Header("Settings")]
     public int abilityCount;
-    private void OnTriggerEnter2D(Collider2D collision)
+
+    public float respawnTime;
+    
+    private async void OnTriggerEnter2D(Collider2D collision)
     {
         PlayerAbility playerAbility = collision.GetComponent<PlayerAbility>();
-        if (playerAbility != null && playerAbility.Ability != null)
+        if (playerAbility != null && playerAbility.Ability == null)
         {
             Canvas uiCanvas = playerAbility.transform.Find("PlayerModel/UICanvas")?.GetComponent<Canvas>();
             if(uiCanvas != null)
@@ -42,7 +49,7 @@ public class CollectAbility : MonoBehaviour
                             abilityText.text = "Rocket";
                             break;
                         case 5:
-                            playerAbility.Ability = "Muchspeed";
+                            playerAbility.Ability = "MuchSpeed";
                             abilityText.text = "Speed";
                             break;
                         case 6:
@@ -50,8 +57,21 @@ public class CollectAbility : MonoBehaviour
                             abilityText.text = "Invinsible";
                             break;
                     }
+                    RespawnAbility();
                 }
             }
         }
     }
+    
+        private async void RespawnAbility()
+        {
+            gameObject.SetActive(false);
+
+            await Task.Delay((int)(respawnTime * 1000)); 
+
+            if (PhotonNetwork.IsMasterClient)
+            {
+                gameObject.SetActive(true);
+            }
+        }
 }

@@ -3,11 +3,15 @@ using Photon.Pun;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float moveSpeed;
+    PhotonView view;
 
+    [Header("References")]
     public GameObject playerModel;
 
-    PhotonView view;
+    [Space]
+
+    [Header("Settings")]
+    public float moveSpeed;
 
     void Start()
     {

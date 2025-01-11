@@ -3,7 +3,9 @@ using UnityEngine;
 
 public class Platforms : MonoBehaviour
 {
+    [Header("Settings")]
     public float jumpPower;
+
     public float destroyFloat;
     private void OnCollisionStay2D(Collision2D collision)
     {

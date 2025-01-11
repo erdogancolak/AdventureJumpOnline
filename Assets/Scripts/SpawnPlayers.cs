@@ -3,7 +3,12 @@ using UnityEngine;
 
 public class SpawnPlayers : MonoBehaviour
 {
+    [Header("References")]
     public GameObject player;
+
+    [Space]
+
+    [Header("Settings")]
     public float minX;
     public float maxX;
 

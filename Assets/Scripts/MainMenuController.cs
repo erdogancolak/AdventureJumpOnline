@@ -6,11 +6,18 @@ using Photon.Realtime;
 
 public class MainMenuController: MonoBehaviourPunCallbacks
 {
-    public int maxPlayer;
+    [Header("References")]
+
     public TMP_InputField createInput;
     public TMP_InputField joinInput;
 
     public TMP_InputField nicknameInput;
+
+    [Space]
+    [Header("Settings")]
+
+    public int maxPlayer;
+
     public void SetPlayerName()
     {
         PhotonNetwork.NickName = nicknameInput.text;

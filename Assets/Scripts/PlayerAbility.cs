@@ -7,10 +7,13 @@ using TMPro;
 public class PlayerAbility : MonoBehaviour
 {
     PhotonView photonView;
+    [Header("Settings")]
     [HideInInspector] public string Ability;
     private TMP_Text abilityNameText;
 
-    [Header("Effects")]
+    [Space]
+
+    [Header("EffectSettings")]
     public float blindEffectTime;
     [Space]
     public float slowEffectTime;
@@ -34,7 +37,7 @@ public class PlayerAbility : MonoBehaviour
     }
     void Start()
     {
-        Ability = "BlindEnemy";
+        Ability = null;
         playerModelSprite = transform.GetChild(0).GetComponent<SpriteRenderer>().sprite;
         abilityNameText = transform.Find("PlayerModel/UICanvas/AbilityNameText")?.GetComponent<TMP_Text>();
         
@@ -53,45 +56,53 @@ public class PlayerAbility : MonoBehaviour
         switch (Ability)
         {
             case "BlindEnemy":
-                photonView.RPC("BlindEnemyAbility", RpcTarget.All);
+                photonView.RPC("BlindEnemyAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
                 break;
             case "SlowEnemy":
-                photonView.RPC("SlowEnemyAbility", RpcTarget.All); 
+                photonView.RPC("SlowEnemyAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber); 
                 break;
             case "ReverseControlEnemy":
-                photonView.RPC("ReverseControlAbility", RpcTarget.All);
+                photonView.RPC("ReverseControlAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
                 break;
             case "ShieldPlayer":
-                photonView.RPC("ShieldPlayerAbility", RpcTarget.All);
+                photonView.RPC("ShieldPlayerAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
                 break;
             case "Rocket":
-                photonView.RPC("RocketAbility", RpcTarget.All);
+                photonView.RPC("RocketAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
                 break;
             case "MuchSpeed":
-                photonView.RPC("MuchSpeedAbility", RpcTarget.All);
+                photonView.RPC("MuchSpeedAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
                 break;
             case "Invinsible":
-                photonView.RPC("InvinsibleAbility", RpcTarget.All);
+                photonView.RPC("InvinsibleAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
                 break;
             default:
                 return;
-                break;
+        }
+       ResetAbiliyUI();
+    }
+    private void ResetAbiliyUI()
+    {
+        Ability = null;
+        if (abilityNameText != null)
+        {
+            abilityNameText.text = null;
         }
     }
     #region BlindEnemy
     [PunRPC]
-    private void BlindEnemyAbility()
+    private void BlindEnemyAbility(int actorNumber)
     {
-        //if (!photonView.IsMine && !isShieldActive)
-        //{
+        if (photonView.Owner.ActorNumber == actorNumber) return;
+
+        if (!isShieldActive)
+        {
             StartCoroutine(ApplyBlindEnemyEffect());
-        //}
+        }
     }
 
     IEnumerator ApplyBlindEnemyEffect()
     {
-        Ability = null;
-       
         GameObject blindPanel1 = new GameObject("BlindPanel1");
         GameObject blindPanel2 = new GameObject("BlindPanel2");
         Canvas canvas = transform.Find("BlindEffectCanvas").GetComponent<Canvas>();
@@ -120,21 +131,17 @@ public class PlayerAbility : MonoBehaviour
     #endregion
     #region SlowEnemy
     [PunRPC]
-    private void SlowEnemyAbility()
+    private void SlowEnemyAbility(int actorNumber)
     {
-        if (!photonView.IsMine && !isShieldActive)
+        if (photonView.Owner.ActorNumber == actorNumber) return;
+
+        if (!isShieldActive)
         {
             StartCoroutine(ApplySlowEnemyEffect());
         }
     }
     IEnumerator ApplySlowEnemyEffect()
     {
-        Ability = null;
-        if (abilityNameText != null)
-        {
-            abilityNameText.text = Ability;
-
-        }
         PlayerMovement movement = GetComponent<PlayerMovement>();
         if(movement != null)
         {
@@ -149,21 +156,18 @@ public class PlayerAbility : MonoBehaviour
     #endregion
     #region ReverseControl
     [PunRPC]
-    private void ReverseControlAbility()
+    private void ReverseControlAbility(int actorNumber)
     {
-        if (!photonView.IsMine && !isShieldActive)
+        if(photonView.Owner.ActorNumber == actorNumber) return; 
+
+        if (!isShieldActive)
         {
             StartCoroutine(ApplyReverseControlEnemyEffect());
         }
     }
     IEnumerator ApplyReverseControlEnemyEffect()
     {
-        Ability = null;
-        if (abilityNameText != null)
-        {
-            abilityNameText.text = Ability;
-
-        }
+        
         PlayerMovement movement = GetComponent<PlayerMovement>();
         if(movement != null)
         {
@@ -178,21 +182,14 @@ public class PlayerAbility : MonoBehaviour
     #endregion
     #region ShieldPlayer
     [PunRPC]
-    private void ShieldPlayerAbility()
-    {   
-        if(photonView.IsMine)
-        {
-            StartCoroutine(ApplyShieldPlayerEffect());
-        }
+    private void ShieldPlayerAbility(int actorNumber)
+    {
+        if (photonView.Owner.ActorNumber != actorNumber) return;
+        
+        StartCoroutine(ApplyShieldPlayerEffect());
     }
     IEnumerator ApplyShieldPlayerEffect()
     {
-        Ability = null;
-        if (abilityNameText != null)
-        {
-            abilityNameText.text = Ability;
-
-        }
         isShieldActive = true;
 
         yield return new WaitForSeconds(shieldEffectTime);
@@ -202,21 +199,14 @@ public class PlayerAbility : MonoBehaviour
     #endregion
     #region Rocket
     [PunRPC]
-    private void RocketAbility()
+    private void RocketAbility(int actorNumber)
     {
-        if (photonView.IsMine)
-        {
-            StartCoroutine(ApplyRocketAbilityEffect());
-        }
+        if (photonView.Owner.ActorNumber != actorNumber) return;
+
+        StartCoroutine(ApplyRocketAbilityEffect());
     }
     IEnumerator ApplyRocketAbilityEffect()
     {
-        Ability = null;
-        if (abilityNameText != null)
-        {
-            abilityNameText.text = Ability;
-
-        }
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         if(rb != null)
         {
@@ -235,21 +225,17 @@ public class PlayerAbility : MonoBehaviour
     #endregion
     #region MuchSpeed
     [PunRPC]
-    private void MuchSpeedAbility()
+    private void MuchSpeedAbility(int actorNumber)
     {
-        if (!photonView.IsMine)
+        if (photonView.Owner.ActorNumber == actorNumber) return;
+
+        if (!isShieldActive)
         {
             StartCoroutine(ApplyMuchSpeedAbility());
         }
     }
     IEnumerator ApplyMuchSpeedAbility()
     {
-        Ability = null;
-        if (abilityNameText != null)
-        {
-            abilityNameText.text = Ability;
-
-        }
         PlayerMovement playerMovement = GetComponent<PlayerMovement>();
         if(playerMovement != null)
         {
@@ -264,21 +250,17 @@ public class PlayerAbility : MonoBehaviour
     #endregion
     #region Invinsible
     [PunRPC]
-    private void InvinsibleAbility()
+    private void InvinsibleAbility(int actorNumber)
     {
-        if (!photonView.IsMine)
+        if (photonView.Owner.ActorNumber == actorNumber) return;
+
+        if (!isShieldActive)
         {
             StartCoroutine(ApplyInvinsibleAbilityEffect());
         }
     }
     IEnumerator ApplyInvinsibleAbilityEffect()
     {
-        Ability = null;
-        if (abilityNameText != null)
-        {
-            abilityNameText.text = Ability;
-
-        }
         GameObject playerModel = transform.GetChild(0).gameObject;
         playerModel.GetComponent<SpriteRenderer>().sprite = null;
 
