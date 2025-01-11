@@ -15,7 +15,9 @@ public class CollectAbility : MonoBehaviour
     private async void OnTriggerEnter2D(Collider2D collision)
     {
         PlayerAbility playerAbility = collision.GetComponent<PlayerAbility>();
-        if (playerAbility != null && playerAbility.Ability == null)
+        PhotonView photonView = collision.GetComponent<PhotonView>();
+
+        if (playerAbility != null && playerAbility.Ability == null && photonView != null && photonView.IsMine)
         {
             Canvas uiCanvas = playerAbility.transform.Find("PlayerModel/UICanvas")?.GetComponent<Canvas>();
             if(uiCanvas != null)
@@ -24,7 +26,7 @@ public class CollectAbility : MonoBehaviour
                 if(abilityText != null)
                 {
 
-                    int randomAbility = Random.Range(0, abilityCount);
+                    int randomAbility = Random.Range(0, abilityCount - 1);
 
                     switch (randomAbility)
                     {
@@ -40,10 +42,10 @@ public class CollectAbility : MonoBehaviour
                             playerAbility.Ability = "ReverseControlEnemy";
                             abilityText.text = "Reverse Control";
                             break;
-                        case 3:
-                            playerAbility.Ability = "ShieldPlayer";
-                            abilityText.text = "Shield";
-                            break;
+                        //case 3:
+                        //    playerAbility.Ability = "ShieldPlayer";
+                        //    abilityText.text = "Shield";
+                        //    break;
                         case 4:
                             playerAbility.Ability = "Rocket";
                             abilityText.text = "Rocket";
@@ -52,7 +54,7 @@ public class CollectAbility : MonoBehaviour
                             playerAbility.Ability = "MuchSpeed";
                             abilityText.text = "Speed";
                             break;
-                        case 6:
+                        case 3:
                             playerAbility.Ability = "Invinsible";
                             abilityText.text = "Invinsible";
                             break;

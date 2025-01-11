@@ -35,6 +35,10 @@ public class PlayerMovement : MonoBehaviour
         Vector2 moveAmount = moveInput * moveSpeed * Time.deltaTime;
         transform.position += (Vector3)moveAmount;
     }
+    public void DisableJump(float stunDuration)
+    {
+
+    }
 }
 
 

@@ -10,6 +10,7 @@ public class PlayerAbility : MonoBehaviour
     [Header("Settings")]
     [HideInInspector] public string Ability;
     private TMP_Text abilityNameText;
+    private bool isRocketFinish;
 
     [Space]
 
@@ -64,9 +65,9 @@ public class PlayerAbility : MonoBehaviour
             case "ReverseControlEnemy":
                 photonView.RPC("ReverseControlAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
                 break;
-            case "ShieldPlayer":
-                photonView.RPC("ShieldPlayerAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
-                break;
+            //case "ShieldPlayer":
+            //    photonView.RPC("ShieldPlayerAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
+            //    break;
             case "Rocket":
                 photonView.RPC("RocketAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
                 break;
@@ -105,7 +106,7 @@ public class PlayerAbility : MonoBehaviour
     {
         GameObject blindPanel1 = new GameObject("BlindPanel1");
         GameObject blindPanel2 = new GameObject("BlindPanel2");
-        Canvas canvas = transform.Find("BlindEffectCanvas").GetComponent<Canvas>();
+        Canvas canvas = transform.Find("PlayerModel/BlindEffectCanvas").GetComponent<Canvas>();
         if (canvas != null)
         {
             blindPanel1.transform.SetParent(canvas.transform, false);
@@ -208,8 +209,9 @@ public class PlayerAbility : MonoBehaviour
     IEnumerator ApplyRocketAbilityEffect()
     {
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        if(rb != null)
+        if(rb != null && !isRocketFinish)
         {
+            isRocketFinish =true;
             float originalGravity = rb.gravityScale;
             Vector2 originalVelocity = rb.linearVelocity;
 
@@ -218,6 +220,7 @@ public class PlayerAbility : MonoBehaviour
 
             yield return new WaitForSeconds(RocketEffectTime);
 
+            isRocketFinish = false;
             rb.gravityScale = originalGravity;
             rb.linearVelocity = originalVelocity;
         }

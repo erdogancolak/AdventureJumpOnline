@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using UnityEditor.ShaderGraph.Internal;
 
 public class Spawner : MonoBehaviourPun
 {
     [Header("References")]
-    public GameObject defaultPrefab, jumperPrefab, movedPrefab, cyclePrefab;
+    public GameObject defaultPrefab, jumperPrefab, movedPrefab, cyclePrefab, stunPrefab;
     [Space]
     public GameObject collectAbilityPrefab;
     private GameObject selectedPrefab;
@@ -15,6 +16,7 @@ public class Spawner : MonoBehaviourPun
     [SerializeField] private int platformCount;
     [SerializeField] private float XValueChange;
     [SerializeField] private float minimumY, maximumY;
+    //[SerializeField] private float platformGap;
 
     private Vector3 spawnLocate;
     private int randomNumber;
@@ -27,7 +29,7 @@ public class Spawner : MonoBehaviourPun
             spawnLocate.x = Random.Range(-XValueChange, XValueChange);
             spawnLocate.y += Random.Range(minimumY, maximumY);
 
-            GameObject platform = Instantiate(selectedPrefab, spawnLocate, Quaternion.identity);
+            GameObject platform = PhotonNetwork.Instantiate(selectedPrefab.name, spawnLocate, Quaternion.identity);
         }
         if(PhotonNetwork.IsMasterClient)
         {
@@ -72,6 +74,21 @@ public class Spawner : MonoBehaviourPun
                 return defaultPrefab;
         }
     }
+
+    //private void SpawnOppositePlatform(Vector3 originalPosition)
+    //{
+    //    Vector3 oppositeSpawnLocate = originalPosition;
+    //    oppositeSpawnLocate.x = -originalPosition.x;
+    //    if (originalPosition.x > 0)
+    //    {
+    //        oppositeSpawnLocate.x -= platformGap;
+    //    }
+    //    else if (originalPosition.x < 0)
+    //    {
+    //        oppositeSpawnLocate.x += platformGap;
+    //    }
+    //    PhotonNetwork.Instantiate(defaultPrefab.name, oppositeSpawnLocate, Quaternion.identity);
+    //}
 
     private void SpawnAbilityOnPlatform(GameObject platform)
     {
