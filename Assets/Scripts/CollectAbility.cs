@@ -12,56 +12,47 @@ public class CollectAbility : MonoBehaviour
 
     public float respawnTime;
     
-    private async void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         PlayerAbility playerAbility = collision.GetComponent<PlayerAbility>();
         PhotonView photonView = collision.GetComponent<PhotonView>();
 
         if (playerAbility != null && playerAbility.Ability == null && photonView != null && photonView.IsMine)
         {
-            Canvas uiCanvas = playerAbility.transform.Find("PlayerModel/UICanvas")?.GetComponent<Canvas>();
-            if(uiCanvas != null)
-            {
-                TMP_Text abilityText = uiCanvas.transform.Find("AbilityNameText").GetComponent<TMP_Text>();
+                TMP_Text abilityText = playerAbility.transform.Find("PlayerModel/UICanvas/AbilityNameText").GetComponent<TMP_Text>();
                 if(abilityText != null)
                 {
 
-                    int randomAbility = Random.Range(0, abilityCount - 1);
+                    int randomAbility = Random.Range(0, abilityCount);
 
                     switch (randomAbility)
                     {
                         case 0:
-                            playerAbility.Ability = "BlindEnemy";
-                            abilityText.text = "Blind";
+                            photonView.RPC("BlindEnemyAbility", RpcTarget.Others);
                             break;
                         case 1:
-                            playerAbility.Ability = "SlowEnemy";
-                            abilityText.text = "Slow";
+                            photonView.RPC("SlowEnemyAbility", RpcTarget.Others);
                             break;
                         case 2:
-                            playerAbility.Ability = "ReverseControlEnemy";
-                            abilityText.text = "Reverse Control";
+                            photonView.RPC("ReverseControlAbility", RpcTarget.Others);
                             break;
                         //case 3:
                         //    playerAbility.Ability = "ShieldPlayer";
                         //    abilityText.text = "Shield";
                         //    break;
-                        case 4:
-                            playerAbility.Ability = "Rocket";
-                            abilityText.text = "Rocket";
-                            break;
-                        case 5:
-                            playerAbility.Ability = "MuchSpeed";
-                            abilityText.text = "Speed";
-                            break;
+                        //case 4:
+                        //    playerAbility.Ability = "Rocket";
+                        //    abilityText.text = "Rocket";
+                        //    break;
                         case 3:
-                            playerAbility.Ability = "Invinsible";
-                            abilityText.text = "Invinsible";
+                            photonView.RPC("MuchSpeedAbility", RpcTarget.Others);
+                            break;
+                        case 4:
+                            photonView.RPC("InvinsibleAbility", RpcTarget.Others);
                             break;
                     }
-                    RespawnAbility();
+                    //RespawnAbility();
                 }
-            }
         }
     }
     

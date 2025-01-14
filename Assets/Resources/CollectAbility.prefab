@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a69334c3986534e4b9bbe8c088b81c9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  abilityCount: 7
+  abilityCount: 5
   respawnTime: 5
 --- !u!114 &-2095779830000904320
 MonoBehaviour:

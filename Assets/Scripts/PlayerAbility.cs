@@ -46,10 +46,10 @@ public class PlayerAbility : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.U))
-        {
-            useAbility();
-        }
+        //if(Input.GetKeyDown(KeyCode.U))
+        //{
+        //    useAbility();
+        //}
     }
 
     public void useAbility()
@@ -57,32 +57,32 @@ public class PlayerAbility : MonoBehaviour
         switch (Ability)
         {
             case "BlindEnemy":
-                photonView.RPC("BlindEnemyAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
+                photonView.RPC("BlindEnemyAbility", RpcTarget.Others);
                 break;
             case "SlowEnemy":
-                photonView.RPC("SlowEnemyAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber); 
+                photonView.RPC("SlowEnemyAbility", RpcTarget.Others); 
                 break;
             case "ReverseControlEnemy":
-                photonView.RPC("ReverseControlAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
+                photonView.RPC("ReverseControlAbility", RpcTarget.Others);
                 break;
             //case "ShieldPlayer":
             //    photonView.RPC("ShieldPlayerAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
             //    break;
-            case "Rocket":
-                photonView.RPC("RocketAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
-                break;
+            //case "Rocket":
+            //    photonView.RPC("RocketAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
+            //    break;
             case "MuchSpeed":
-                photonView.RPC("MuchSpeedAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
+                photonView.RPC("MuchSpeedAbility", RpcTarget.Others);
                 break;
             case "Invinsible":
-                photonView.RPC("InvinsibleAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
+                photonView.RPC("InvinsibleAbility", RpcTarget.Others);
                 break;
             default:
                 return;
         }
        ResetAbiliyUI();
     }
-    private void ResetAbiliyUI()
+    public void ResetAbiliyUI()
     {
         Ability = null;
         if (abilityNameText != null)
@@ -92,54 +92,37 @@ public class PlayerAbility : MonoBehaviour
     }
     #region BlindEnemy
     [PunRPC]
-    private void BlindEnemyAbility(int actorNumber)
+    private void BlindEnemyAbility()
     {
-        if (photonView.Owner.ActorNumber == actorNumber) return;
-
-        if (!isShieldActive)
-        {
-            StartCoroutine(ApplyBlindEnemyEffect());
-        }
+        StartCoroutine(ApplyBlindEnemyEffect());
     }
 
     IEnumerator ApplyBlindEnemyEffect()
     {
         GameObject blindPanel1 = new GameObject("BlindPanel1");
-        GameObject blindPanel2 = new GameObject("BlindPanel2");
         Canvas canvas = transform.Find("PlayerModel/BlindEffectCanvas").GetComponent<Canvas>();
         if (canvas != null)
         {
             blindPanel1.transform.SetParent(canvas.transform, false);
-            blindPanel2.transform.SetParent(canvas.transform, false);
             RectTransform rt1 = blindPanel1.AddComponent<RectTransform>();
-            RectTransform rt2 = blindPanel2.AddComponent<RectTransform>();
             rt1.sizeDelta = new Vector2(Screen.width, Screen.height);
-            rt2.sizeDelta = new Vector2(Screen.width, Screen.height);
         }
 
         CanvasRenderer cr1 = blindPanel1.AddComponent<CanvasRenderer>();
-        CanvasRenderer cr2 = blindPanel2.AddComponent<CanvasRenderer>();
         Image img1 = blindPanel1.AddComponent<Image>();
-        Image img2 = blindPanel2.AddComponent<Image>();
         img1.color = new Color(0, 0, 0, 0.94f); 
-        img2.color = new Color(0, 0, 0, 0.94f); 
 
         yield return new WaitForSeconds(blindEffectTime);
 
         Destroy(blindPanel1);
-        Destroy(blindPanel2);
     }
     #endregion
     #region SlowEnemy
     [PunRPC]
-    private void SlowEnemyAbility(int actorNumber)
+    private void SlowEnemyAbility()
     {
-        if (photonView.Owner.ActorNumber == actorNumber) return;
-
-        if (!isShieldActive)
-        {
-            StartCoroutine(ApplySlowEnemyEffect());
-        }
+        StartCoroutine(ApplySlowEnemyEffect());
+       
     }
     IEnumerator ApplySlowEnemyEffect()
     {
@@ -157,14 +140,9 @@ public class PlayerAbility : MonoBehaviour
     #endregion
     #region ReverseControl
     [PunRPC]
-    private void ReverseControlAbility(int actorNumber)
+    private void ReverseControlAbility()
     {
-        if(photonView.Owner.ActorNumber == actorNumber) return; 
-
-        if (!isShieldActive)
-        {
-            StartCoroutine(ApplyReverseControlEnemyEffect());
-        }
+        StartCoroutine(ApplyReverseControlEnemyEffect());
     }
     IEnumerator ApplyReverseControlEnemyEffect()
     {
@@ -228,14 +206,9 @@ public class PlayerAbility : MonoBehaviour
     #endregion
     #region MuchSpeed
     [PunRPC]
-    private void MuchSpeedAbility(int actorNumber)
+    private void MuchSpeedAbility()
     {
-        if (photonView.Owner.ActorNumber == actorNumber) return;
-
-        if (!isShieldActive)
-        {
-            StartCoroutine(ApplyMuchSpeedAbility());
-        }
+        StartCoroutine(ApplyMuchSpeedAbility());
     }
     IEnumerator ApplyMuchSpeedAbility()
     {
@@ -253,14 +226,9 @@ public class PlayerAbility : MonoBehaviour
     #endregion
     #region Invinsible
     [PunRPC]
-    private void InvinsibleAbility(int actorNumber)
+    private void InvinsibleAbility()
     {
-        if (photonView.Owner.ActorNumber == actorNumber) return;
-
-        if (!isShieldActive)
-        {
-            StartCoroutine(ApplyInvinsibleAbilityEffect());
-        }
+        StartCoroutine(ApplyInvinsibleAbilityEffect());
     }
     IEnumerator ApplyInvinsibleAbilityEffect()
     {

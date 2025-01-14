@@ -23,16 +23,16 @@ public class Spawner : MonoBehaviourPun
 
     void Start()
     {
-        for (int i = 0; i < platformCount; i++)
+        if (PhotonNetwork.IsMasterClient)
         {
-            selectedPrefab = defaultPrefab;
-            spawnLocate.x = Random.Range(-XValueChange, XValueChange);
-            spawnLocate.y += Random.Range(minimumY, maximumY);
+            for (int i = 0; i < platformCount; i++)
+            {
+                selectedPrefab = defaultPrefab;
+                spawnLocate.x = Random.Range(-XValueChange, XValueChange);
+                spawnLocate.y += Random.Range(minimumY, maximumY);
 
-            GameObject platform = PhotonNetwork.Instantiate(selectedPrefab.name, spawnLocate, Quaternion.identity);
-        }
-        if(PhotonNetwork.IsMasterClient)
-        {
+                GameObject platform = PhotonNetwork.Instantiate(selectedPrefab.name, spawnLocate, Quaternion.identity);
+            }
             StartCoroutine(PlatformSpawner());
         }
     }
