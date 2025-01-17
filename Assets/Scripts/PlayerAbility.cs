@@ -52,36 +52,36 @@ public class PlayerAbility : MonoBehaviour
         //}
     }
 
-    public void useAbility()
-    {
-        switch (Ability)
-        {
-            case "BlindEnemy":
-                photonView.RPC("BlindEnemyAbility", RpcTarget.Others);
-                break;
-            case "SlowEnemy":
-                photonView.RPC("SlowEnemyAbility", RpcTarget.Others); 
-                break;
-            case "ReverseControlEnemy":
-                photonView.RPC("ReverseControlAbility", RpcTarget.Others);
-                break;
-            //case "ShieldPlayer":
-            //    photonView.RPC("ShieldPlayerAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
-            //    break;
-            //case "Rocket":
-            //    photonView.RPC("RocketAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
-            //    break;
-            case "MuchSpeed":
-                photonView.RPC("MuchSpeedAbility", RpcTarget.Others);
-                break;
-            case "Invinsible":
-                photonView.RPC("InvinsibleAbility", RpcTarget.Others);
-                break;
-            default:
-                return;
-        }
-       ResetAbiliyUI();
-    }
+    //public void useAbility()
+    //{
+    //    switch (Ability)
+    //    {
+    //        case "BlindEnemy":
+    //            photonView.RPC("BlindEnemyAbility", RpcTarget.Others);
+    //            break;
+    //        case "SlowEnemy":
+    //            photonView.RPC("SlowEnemyAbility", RpcTarget.Others); 
+    //            break;
+    //        case "ReverseControlEnemy":
+    //            photonView.RPC("ReverseControlAbility", RpcTarget.Others);
+    //            break;
+    //        //case "ShieldPlayer":
+    //        //    photonView.RPC("ShieldPlayerAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
+    //        //    break;
+    //        //case "Rocket":
+    //        //    photonView.RPC("RocketAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
+    //        //    break;
+    //        case "MuchSpeed":
+    //            photonView.RPC("MuchSpeedAbility", RpcTarget.Others);
+    //            break;
+    //        case "Invinsible":
+    //            photonView.RPC("InvinsibleAbility", RpcTarget.Others);
+    //            break;
+    //        default:
+    //            return;
+    //    }
+    //   ResetAbiliyUI();
+    //}
     public void ResetAbiliyUI()
     {
         Ability = null;
@@ -90,15 +90,17 @@ public class PlayerAbility : MonoBehaviour
             abilityNameText.text = null;
         }
     }
-    #region BlindEnemy
+    #region Blind
     [PunRPC]
-    private void BlindEnemyAbility()
+    private void BlindAbility()
     {
-        StartCoroutine(ApplyBlindEnemyEffect());
+        Debug.Log("Blind");
+        StartCoroutine(ApplyBlindEffect());
     }
 
-    IEnumerator ApplyBlindEnemyEffect()
+    IEnumerator ApplyBlindEffect()
     {
+        Ability = null;
         GameObject blindPanel1 = new GameObject("BlindPanel1");
         Canvas canvas = transform.Find("PlayerModel/BlindEffectCanvas").GetComponent<Canvas>();
         if (canvas != null)
@@ -117,18 +119,24 @@ public class PlayerAbility : MonoBehaviour
         Destroy(blindPanel1);
     }
     #endregion
-    #region SlowEnemy
+    #region Slow
     [PunRPC]
-    private void SlowEnemyAbility()
+    private void SlowAbility()
     {
-        StartCoroutine(ApplySlowEnemyEffect());
+        if (photonView.IsMine) return;
+
+        Debug.Log("Slow");
+        StartCoroutine(ApplySlowEffect());
        
     }
-    IEnumerator ApplySlowEnemyEffect()
+    IEnumerator ApplySlowEffect()
     {
+        Ability = null;
         PlayerMovement movement = GetComponent<PlayerMovement>();
         if(movement != null)
         {
+            Debug.Log("Slow Girdi");
+            Debug.Log($"Applying SlowEffect to {photonView.Owner.NickName}");
             float originalSpeed = movement.moveSpeed;
             movement.moveSpeed *= 0.5f;
 
@@ -142,14 +150,19 @@ public class PlayerAbility : MonoBehaviour
     [PunRPC]
     private void ReverseControlAbility()
     {
-        StartCoroutine(ApplyReverseControlEnemyEffect());
+        if (photonView.IsMine) return;
+
+        Debug.Log("Reverse");
+        StartCoroutine(ApplyReverseControlEffect());
     }
-    IEnumerator ApplyReverseControlEnemyEffect()
+    IEnumerator ApplyReverseControlEffect()
     {
-        
+        Ability = null;
         PlayerMovement movement = GetComponent<PlayerMovement>();
         if(movement != null)
         {
+            Debug.Log("Reverse Girdi");
+            Debug.Log($"Applying ReverseEffect to {photonView.Owner.NickName}");
             float originalSpeed = movement.moveSpeed;
             movement.moveSpeed *= -1;
             
@@ -204,17 +217,23 @@ public class PlayerAbility : MonoBehaviour
         }
     }
     #endregion
-    #region MuchSpeed
+    #region Speed
     [PunRPC]
-    private void MuchSpeedAbility()
+    private void SpeedAbility()
     {
-        StartCoroutine(ApplyMuchSpeedAbility());
+        if (photonView.IsMine) return;
+
+        Debug.Log("Speed");
+        StartCoroutine(ApplySpeedAbility());
     }
-    IEnumerator ApplyMuchSpeedAbility()
+    IEnumerator ApplySpeedAbility()
     {
+        Ability = null;
         PlayerMovement playerMovement = GetComponent<PlayerMovement>();
         if(playerMovement != null)
         {
+            Debug.Log("Speed Girdi");
+            Debug.Log($"Applying SpeedEffect to {photonView.Owner.NickName}");
             float originalSpeed = playerMovement.moveSpeed;
             playerMovement.moveSpeed *= 3f;
 
@@ -228,16 +247,25 @@ public class PlayerAbility : MonoBehaviour
     [PunRPC]
     private void InvinsibleAbility()
     {
-        StartCoroutine(ApplyInvinsibleAbilityEffect());
+        if (photonView.IsMine) return;
+
+        Debug.Log("Invinsible");
+        StartCoroutine(ApplyInvinsibleEffect());
     }
-    IEnumerator ApplyInvinsibleAbilityEffect()
+    IEnumerator ApplyInvinsibleEffect()
     {
+        Ability = null;
         GameObject playerModel = transform.GetChild(0).gameObject;
-        playerModel.GetComponent<SpriteRenderer>().sprite = null;
+        if(playerModel != null)
+        {
+            Debug.Log("Invisible Girdi");
+            Debug.Log($"Applying InvinsibleEffect to {photonView.Owner.NickName}");
+            playerModel.GetComponent<SpriteRenderer>().sprite = null;
 
-        yield return new WaitForSeconds(InvinsibleEffectTime);
+            yield return new WaitForSeconds(InvinsibleEffectTime);
 
-        playerModel.GetComponent<SpriteRenderer>().sprite = playerModelSprite;
+            playerModel.GetComponent<SpriteRenderer>().sprite = playerModelSprite;
+        }
     }
     #endregion
 }

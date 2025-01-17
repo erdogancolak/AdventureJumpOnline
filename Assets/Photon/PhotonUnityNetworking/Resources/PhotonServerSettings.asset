@@ -49,6 +49,9 @@ MonoBehaviour:
   - MuchSpeedAbility
   - InvinsibleAbility
   - SpawnPlatform
+  - BlindAbility
+  - SlowAbility
+  - SpeedAbility
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

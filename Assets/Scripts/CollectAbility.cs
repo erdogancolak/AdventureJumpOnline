@@ -14,8 +14,8 @@ public class CollectAbility : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        PlayerAbility playerAbility = collision.GetComponent<PlayerAbility>();
         PhotonView photonView = collision.GetComponent<PhotonView>();
+        PlayerAbility playerAbility = collision.GetComponent<PlayerAbility>();
 
         if (playerAbility != null && playerAbility.Ability == null && photonView != null && photonView.IsMine)
         {
@@ -28,10 +28,10 @@ public class CollectAbility : MonoBehaviour
                     switch (randomAbility)
                     {
                         case 0:
-                            photonView.RPC("BlindEnemyAbility", RpcTarget.Others);
+                            photonView.RPC("BlindAbility", RpcTarget.Others);
                             break;
                         case 1:
-                            photonView.RPC("SlowEnemyAbility", RpcTarget.Others);
+                            photonView.RPC("SlowAbility", RpcTarget.Others);
                             break;
                         case 2:
                             photonView.RPC("ReverseControlAbility", RpcTarget.Others);
@@ -45,7 +45,7 @@ public class CollectAbility : MonoBehaviour
                         //    abilityText.text = "Rocket";
                         //    break;
                         case 3:
-                            photonView.RPC("MuchSpeedAbility", RpcTarget.Others);
+                            photonView.RPC("SpeedAbility", RpcTarget.Others);
                             break;
                         case 4:
                             photonView.RPC("InvinsibleAbility", RpcTarget.Others);
