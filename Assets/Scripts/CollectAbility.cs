@@ -23,7 +23,7 @@ public class CollectAbility : MonoBehaviour
                 if(abilityText != null)
                 {
 
-                    int randomAbility = Random.Range(0, abilityCount);
+                    int randomAbility = Random.Range(0, abilityCount - 1);
 
                     switch (randomAbility)
                     {
@@ -47,9 +47,9 @@ public class CollectAbility : MonoBehaviour
                         case 3:
                             photonView.RPC("SpeedAbility", RpcTarget.Others);
                             break;
-                        case 4:
-                            photonView.RPC("InvinsibleAbility", RpcTarget.Others);
-                            break;
+                        //case 4:
+                        //    photonView.RPC("InvinsibleAbility", RpcTarget.Others);
+                        //    break;
                     }
                     //RespawnAbility();
                 }

@@ -123,26 +123,24 @@ public class PlayerAbility : MonoBehaviour
     [PunRPC]
     private void SlowAbility()
     {
-        if (photonView.IsMine) return;
+        PlayerMovement playerMovement = GetComponent<PlayerMovement>();
+
+        if (playerMovement == null) return;
 
         Debug.Log("Slow");
-        StartCoroutine(ApplySlowEffect());
+        StartCoroutine(ApplySlowEffect(playerMovement));
        
     }
-    IEnumerator ApplySlowEffect()
+    IEnumerator ApplySlowEffect(PlayerMovement playerMovement)
     {
         Ability = null;
-        PlayerMovement movement = GetComponent<PlayerMovement>();
-        if(movement != null)
+        if(playerMovement != null)
         {
-            Debug.Log("Slow Girdi");
-            Debug.Log($"Applying SlowEffect to {photonView.Owner.NickName}");
-            float originalSpeed = movement.moveSpeed;
-            movement.moveSpeed *= 0.5f;
+            playerMovement.speed = PlayerMovement.Speeds.slow;
 
             yield return new WaitForSeconds(slowEffectTime);
 
-            movement.moveSpeed = originalSpeed;
+            playerMovement.speed = PlayerMovement.Speeds.regular;
         }
     }
     #endregion
@@ -150,25 +148,24 @@ public class PlayerAbility : MonoBehaviour
     [PunRPC]
     private void ReverseControlAbility()
     {
-        if (photonView.IsMine) return;
+        PlayerMovement playerMovement = GetComponent< PlayerMovement>();
+
+        if (playerMovement == null) return;
 
         Debug.Log("Reverse");
-        StartCoroutine(ApplyReverseControlEffect());
+        StartCoroutine(ApplyReverseControlEffect(playerMovement));
     }
-    IEnumerator ApplyReverseControlEffect()
+    IEnumerator ApplyReverseControlEffect(PlayerMovement playerMovement)
     {
         Ability = null;
-        PlayerMovement movement = GetComponent<PlayerMovement>();
-        if(movement != null)
+
+        if(playerMovement != null)
         {
-            Debug.Log("Reverse Girdi");
-            Debug.Log($"Applying ReverseEffect to {photonView.Owner.NickName}");
-            float originalSpeed = movement.moveSpeed;
-            movement.moveSpeed *= -1;
+            playerMovement.speed = PlayerMovement.Speeds.reverse;
             
             yield return new WaitForSeconds(reverseControlEffectTime);
 
-            movement.moveSpeed = originalSpeed;
+            playerMovement.speed = PlayerMovement.Speeds.regular;
         }
     }
     #endregion
@@ -221,25 +218,24 @@ public class PlayerAbility : MonoBehaviour
     [PunRPC]
     private void SpeedAbility()
     {
-        if (photonView.IsMine) return;
+        PlayerMovement playerMovement = GetComponent<PlayerMovement>();
+
+        if (playerMovement == null) return;
 
         Debug.Log("Speed");
-        StartCoroutine(ApplySpeedAbility());
+        StartCoroutine(ApplySpeedAbility(playerMovement));
     }
-    IEnumerator ApplySpeedAbility()
+    IEnumerator ApplySpeedAbility(PlayerMovement playerMovement)
     {
         Ability = null;
-        PlayerMovement playerMovement = GetComponent<PlayerMovement>();
+       
         if(playerMovement != null)
         {
-            Debug.Log("Speed Girdi");
-            Debug.Log($"Applying SpeedEffect to {photonView.Owner.NickName}");
-            float originalSpeed = playerMovement.moveSpeed;
-            playerMovement.moveSpeed *= 3f;
+            playerMovement.speed = PlayerMovement.Speeds.fast;
 
             yield return new WaitForSeconds(MuchSpeedEffectTime);
-            
-            playerMovement.moveSpeed = originalSpeed;
+
+            playerMovement.speed = PlayerMovement.Speeds.regular;
         }
     }
     #endregion
