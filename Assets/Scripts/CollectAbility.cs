@@ -29,16 +29,13 @@ public class CollectAbility : MonoBehaviour
                     {
                         case 0:
                             playerAbility.Ability = "Slow";
-                        Debug.Log(playerAbility.Ability);
                             break;
                         case 1:
                             playerAbility.Ability = "Speed";
-                        Debug.Log(playerAbility.Ability);
-                        break;
+                            break;
                         case 2:
-                            playerAbility.Ability = "Reverse";
-                        Debug.Log(playerAbility.Ability);
-                        break;
+                            playerAbility.Ability = "Reverse Control";
+                            break;
                         //case 3:
                         //    playerAbility.Ability = "ShieldPlayer";
                         //    abilityText.text = "Shield";
@@ -54,13 +51,14 @@ public class CollectAbility : MonoBehaviour
                         //    photonView.RPC("InvinsibleAbility", RpcTarget.Others);
                         //    break;
                     }
-                    RespawnAbility();
+                SetTextAbility(playerAbility.Ability, abilityText);
+                RespawnAbility();
                 }
         }
     }
-    
-        private async void RespawnAbility()
-        {
+
+    private async void RespawnAbility()
+    {
             gameObject.SetActive(false);
 
             await Task.Delay((int)(respawnTime * 1000)); 
@@ -69,5 +67,9 @@ public class CollectAbility : MonoBehaviour
             {
                 gameObject.SetActive(true);
             }
-        }
+    }
+    private void SetTextAbility(string Ability,TMP_Text abilityText)
+    {
+        abilityText.text = Ability;
+    }
 }
