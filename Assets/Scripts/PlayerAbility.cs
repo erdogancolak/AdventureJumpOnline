@@ -8,7 +8,7 @@ public class PlayerAbility : MonoBehaviour
 {
     PhotonView photonView;
     [Header("Settings")]
-    [HideInInspector] public string Ability;
+    /*[HideInInspector]*/ public string Ability;
     private TMP_Text abilityNameText;
     private bool isRocketFinish;
 
@@ -46,42 +46,44 @@ public class PlayerAbility : MonoBehaviour
 
     void Update()
     {
-        //if(Input.GetKeyDown(KeyCode.U))
-        //{
-        //    useAbility();
-        //}
+        if (Input.GetKeyDown(KeyCode.U) && Ability != null)
+        {
+            useAbility();
+        }
     }
 
-    //public void useAbility()
-    //{
-    //    switch (Ability)
-    //    {
-    //        case "BlindEnemy":
-    //            photonView.RPC("BlindEnemyAbility", RpcTarget.Others);
-    //            break;
-    //        case "SlowEnemy":
-    //            photonView.RPC("SlowEnemyAbility", RpcTarget.Others); 
-    //            break;
-    //        case "ReverseControlEnemy":
-    //            photonView.RPC("ReverseControlAbility", RpcTarget.Others);
-    //            break;
-    //        //case "ShieldPlayer":
-    //        //    photonView.RPC("ShieldPlayerAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
-    //        //    break;
-    //        //case "Rocket":
-    //        //    photonView.RPC("RocketAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
-    //        //    break;
-    //        case "MuchSpeed":
-    //            photonView.RPC("MuchSpeedAbility", RpcTarget.Others);
-    //            break;
-    //        case "Invinsible":
-    //            photonView.RPC("InvinsibleAbility", RpcTarget.Others);
-    //            break;
-    //        default:
-    //            return;
-    //    }
-    //   ResetAbiliyUI();
-    //}
+    public void useAbility()
+    {
+        Debug.Log(Ability + " Used");
+        switch (Ability)
+        {
+            //case "BlindEnemy":
+            //    photonView.RPC("BlindEnemyAbility", RpcTarget.Others);
+            //    break;
+            case "Slow":
+                photonView.RPC("SlowEnemyAbility", RpcTarget.Others);
+                break;
+            case "Reverse":
+                photonView.RPC("ReverseControlAbility", RpcTarget.Others);
+                break;
+            //case "ShieldPlayer":
+            //    photonView.RPC("ShieldPlayerAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
+            //    break;
+            //case "Rocket":
+            //    photonView.RPC("RocketAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
+            //    break;
+            case "Speed":
+                photonView.RPC("MuchSpeedAbility", RpcTarget.Others);
+                break;
+            //case "Invinsible":
+            //    photonView.RPC("InvinsibleAbility", RpcTarget.Others);
+            //    break;
+            default:
+                return;
+        }
+        Ability = null;
+        //ResetAbiliyUI();
+    }
     public void ResetAbiliyUI()
     {
         Ability = null;
@@ -121,44 +123,61 @@ public class PlayerAbility : MonoBehaviour
     #endregion
     #region Slow
     [PunRPC]
-    private void SlowAbility()
+    public void SlowEnemyAbility()
     {
-        PlayerMovement playerMovement = GetComponent<PlayerMovement>();
+        Debug.Log("Slowun RPC ye girdi");
 
-        if (playerMovement == null) return;
+        PlayerMovement[] playerMovements = Object.FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
 
-        Debug.Log("Slow");
-        StartCoroutine(ApplySlowEffect(playerMovement));
-       
+        foreach(PlayerMovement playerMovement in playerMovements)
+        {
+            if(!playerMovement.GetComponent<PhotonView>().IsMine)
+            {
+                Debug.Log("Düþman Test");
+                StartCoroutine(ApplySlowEffect(playerMovement));
+            }
+        }
     }
     IEnumerator ApplySlowEffect(PlayerMovement playerMovement)
     {
         Ability = null;
-        if(playerMovement != null)
-        {
-            playerMovement.speed = PlayerMovement.Speeds.slow;
+        Debug.Log("Slowun ÝKÝNCÝSÝNE GÝRDÝ");
 
-            yield return new WaitForSeconds(slowEffectTime);
+        playerMovement.speed = PlayerMovement.Speeds.slow;
 
-            playerMovement.speed = PlayerMovement.Speeds.regular;
-        }
+        Debug.Log(playerMovement.speed);
+        //Debug.Log("Playerýn Slowlanmýþ Speedi" + playerMovement.moveSpeed.ToString());
+
+        yield return new WaitForSeconds(slowEffectTime);
+
+        playerMovement.speed = PlayerMovement.Speeds.regular;
+        Debug.Log(playerMovement.speed);
+
+        //Debug.Log("Playerýn Normale Dönmüþ Speedi" + playerMovement.moveSpeed.ToString());
+        //PlayerMovement playerMovement = GetComponent<PlayerMovement>();
+        //if(playerMovement != null)
+        //{
+        //    Debug.Log("PlayerMovement BULUNDU"); 
+        //    playerMovement.speed = PlayerMovement.Speeds.slow;
+
+        //    yield return new WaitForSeconds(slowEffectTime);
+
+        //    playerMovement.speed = PlayerMovement.Speeds.regular;
+        //}
     }
     #endregion
     #region ReverseControl
     [PunRPC]
-    private void ReverseControlAbility()
+    public void ReverseControlAbility()
     {
-        PlayerMovement playerMovement = GetComponent< PlayerMovement>();
-
-        if (playerMovement == null) return;
 
         Debug.Log("Reverse");
-        StartCoroutine(ApplyReverseControlEffect(playerMovement));
+        StartCoroutine(ApplyReverseControlEffect());
     }
-    IEnumerator ApplyReverseControlEffect(PlayerMovement playerMovement)
+    IEnumerator ApplyReverseControlEffect()
     {
         Ability = null;
-
+        PlayerMovement playerMovement = GetComponent<PlayerMovement>();
         if(playerMovement != null)
         {
             playerMovement.speed = PlayerMovement.Speeds.reverse;
@@ -216,19 +235,16 @@ public class PlayerAbility : MonoBehaviour
     #endregion
     #region Speed
     [PunRPC]
-    private void SpeedAbility()
+    public void MuchSpeedAbility()
     {
-        PlayerMovement playerMovement = GetComponent<PlayerMovement>();
-
-        if (playerMovement == null) return;
-
+ 
         Debug.Log("Speed");
-        StartCoroutine(ApplySpeedAbility(playerMovement));
+        StartCoroutine(ApplySpeedAbility());
     }
-    IEnumerator ApplySpeedAbility(PlayerMovement playerMovement)
+    IEnumerator ApplySpeedAbility()
     {
         Ability = null;
-       
+        PlayerMovement playerMovement = GetComponent<PlayerMovement>();
         if(playerMovement != null)
         {
             playerMovement.speed = PlayerMovement.Speeds.fast;

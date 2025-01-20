@@ -260,7 +260,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerModel: {fileID: 522684985292980067}
-  moveSpeed: 8
+  moveSpeed: 350
   speed: 0
 --- !u!114 &-9028032448506175238
 MonoBehaviour:
@@ -295,7 +295,7 @@ MonoBehaviour:
   isShieldActive: 0
   RocketEffectTime: 2.2
   RocketPower: 17
-  MuchSpeedEffectTime: 5
+  MuchSpeedEffectTime: 10
   InvinsibleEffectTime: 10
 --- !u!1 &3575968353236389964
 GameObject:

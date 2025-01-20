@@ -25,7 +25,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (view == null) return;
 
@@ -34,7 +34,6 @@ public class PlayerMovement : MonoBehaviour
             switch(speed)
             {
                 case Speeds.regular:
-                    Debug.Log(speed);
                     Movement();
                     break;
                 case Speeds.slow:
@@ -56,24 +55,29 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Movement()
     {
-        Vector2 moveInput = new Vector2(Input.GetAxis("Horizontal"), 0);
-        Vector2 moveAmount = moveInput * moveSpeed * Time.deltaTime;
-        transform.position += (Vector3)moveAmount;
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        float sideWalk = Input.GetAxisRaw("Horizontal");
+        rb.linearVelocity = new Vector2(sideWalk * moveSpeed * Time.deltaTime, rb.linearVelocity.y);
+
+        Debug.Log("Movement ÝÇÝNDEKÝ SPEED " + moveSpeed);
     }
     private void SlowMovement()
     {
+        Debug.Log("SlowMovement");
         Vector2 moveInput = new Vector2(Input.GetAxis("Horizontal"), 0);
         Vector2 moveAmount = moveInput * (moveSpeed * .5f) * Time.deltaTime;
         transform.position += (Vector3)moveAmount;
     }
     private void ReverseMovement()
     {
+        Debug.Log("ReverseMovement");
         Vector2 moveInput = new Vector2(Input.GetAxis("Horizontal"), 0);
         Vector2 moveAmount = moveInput * (moveSpeed * -1) * Time.deltaTime;
         transform.position += (Vector3)moveAmount;
     }
     private void MuchSpeedMovement()
     {
+        Debug.Log("FastMovement");
         Vector2 moveInput = new Vector2(Input.GetAxis("Horizontal"), 0);
         Vector2 moveAmount = moveInput * (moveSpeed * 2) * Time.deltaTime;
         transform.position += (Vector3)moveAmount;

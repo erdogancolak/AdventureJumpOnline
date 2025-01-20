@@ -23,19 +23,22 @@ public class CollectAbility : MonoBehaviour
                 if(abilityText != null)
                 {
 
-                    int randomAbility = Random.Range(0, abilityCount - 1);
+                    int randomAbility = Random.Range(0, 3);
 
                     switch (randomAbility)
                     {
                         case 0:
-                            photonView.RPC("BlindAbility", RpcTarget.Others);
+                            playerAbility.Ability = "Slow";
+                        Debug.Log(playerAbility.Ability);
                             break;
                         case 1:
-                            photonView.RPC("SlowAbility", RpcTarget.Others);
-                            break;
+                            playerAbility.Ability = "Speed";
+                        Debug.Log(playerAbility.Ability);
+                        break;
                         case 2:
-                            photonView.RPC("ReverseControlAbility", RpcTarget.Others);
-                            break;
+                            playerAbility.Ability = "Reverse";
+                        Debug.Log(playerAbility.Ability);
+                        break;
                         //case 3:
                         //    playerAbility.Ability = "ShieldPlayer";
                         //    abilityText.text = "Shield";
@@ -44,14 +47,14 @@ public class CollectAbility : MonoBehaviour
                         //    playerAbility.Ability = "Rocket";
                         //    abilityText.text = "Rocket";
                         //    break;
-                        case 3:
-                            photonView.RPC("SpeedAbility", RpcTarget.Others);
-                            break;
+                        //case 3:
+                        //   blind
+                        //    break;
                         //case 4:
                         //    photonView.RPC("InvinsibleAbility", RpcTarget.Others);
                         //    break;
                     }
-                    //RespawnAbility();
+                    RespawnAbility();
                 }
         }
     }
