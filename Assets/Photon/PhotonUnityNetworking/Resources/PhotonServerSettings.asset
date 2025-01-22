@@ -57,6 +57,12 @@ MonoBehaviour:
   - ApplyInvinsibleEffect
   - ApplySpeedAbility
   - ApplyBlindEffect
+  - BlindEffect
+  - SlowEffect
+  - ReverseControlEffect
+  - RocketEffect
+  - SpeedEffect
+  - InvinsibleEffect
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

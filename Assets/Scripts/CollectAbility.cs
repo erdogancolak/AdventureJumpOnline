@@ -19,57 +19,45 @@ public class CollectAbility : MonoBehaviour
 
         if (playerAbility != null && playerAbility.Ability == null && photonView != null && photonView.IsMine)
         {
-                TMP_Text abilityText = playerAbility.transform.Find("PlayerModel/UICanvas/AbilityNameText").GetComponent<TMP_Text>();
-                if(abilityText != null)
-                {
+            int randomAbility = Random.Range(0, abilityCount);
 
-                    int randomAbility = Random.Range(0, 3);
+            switch (randomAbility)
+            {
+                case 0:
+                    playerAbility.Ability = "Slow";
+                    break;
+                case 1:
+                    playerAbility.Ability = "Speed";
+                    break;
+                case 2:
+                    playerAbility.Ability = "Reverse Control";
+                    break;
+                case 3:
+                    playerAbility.Ability = "Rocket";
+                    break;
+                case 4:
+                    playerAbility.Ability = "Blind";
+                    break;
+                case 5:
+                    playerAbility.Ability = "Invinsible";
+                    break;
+            }
+            playerAbility.SetTextAbility(playerAbility.Ability);
 
-                    switch (randomAbility)
-                    {
-                        case 0:
-                            playerAbility.Ability = "Slow";
-                            break;
-                        case 1:
-                            playerAbility.Ability = "Speed";
-                            break;
-                        case 2:
-                            playerAbility.Ability = "Reverse Control";
-                            break;
-                        //case 3:
-                        //    playerAbility.Ability = "ShieldPlayer";
-                        //    abilityText.text = "Shield";
-                        //    break;
-                        //case 4:
-                        //    playerAbility.Ability = "Rocket";
-                        //    abilityText.text = "Rocket";
-                        //    break;
-                        //case 3:
-                        //   blind
-                        //    break;
-                        //case 4:
-                        //    photonView.RPC("InvinsibleAbility", RpcTarget.Others);
-                        //    break;
-                    }
-                SetTextAbility(playerAbility.Ability, abilityText);
-                RespawnAbility();
-                }
+            RespawnAbility();
         }
     }
 
     private async void RespawnAbility()
     {
-            gameObject.SetActive(false);
+        gameObject.SetActive(false);
 
-            await Task.Delay((int)(respawnTime * 1000)); 
+        await Task.Delay((int)(respawnTime * 1000));
 
-            if (PhotonNetwork.IsMasterClient)
-            {
-                gameObject.SetActive(true);
-            }
+        if (PhotonNetwork.IsMasterClient)
+        {
+            gameObject.SetActive(true);
+        }
     }
-    private void SetTextAbility(string Ability,TMP_Text abilityText)
-    {
-        abilityText.text = Ability;
-    }
+    
 }

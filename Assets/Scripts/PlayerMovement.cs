@@ -12,8 +12,6 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Settings")]
     public float moveSpeed;
-    public bool isReversed;
-
     void Start()
     {
         view = GetComponent<PhotonView>();
@@ -36,12 +34,6 @@ public class PlayerMovement : MonoBehaviour
     {
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         float sideWalk = Input.GetAxisRaw("Horizontal");
-
-        if (isReversed)
-        {
-            rb.linearVelocity = new Vector2(sideWalk * (-moveSpeed) * Time.deltaTime, rb.linearVelocity.y);
-            Debug.Log("X");
-        }
 
         rb.linearVelocity = new Vector2(sideWalk * moveSpeed * Time.deltaTime, rb.linearVelocity.y);
     }

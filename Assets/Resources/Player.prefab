@@ -261,7 +261,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerModel: {fileID: 522684985292980067}
   moveSpeed: 350
-  isReversed: 0
 --- !u!114 &-9028032448506175238
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -291,8 +290,6 @@ MonoBehaviour:
   blindEffectTime: 5
   slowEffectTime: 10
   reverseControlEffectTime: 10
-  shieldEffectTime: 10
-  isShieldActive: 0
   RocketEffectTime: 2.2
   RocketPower: 17
   MuchSpeedEffectTime: 10

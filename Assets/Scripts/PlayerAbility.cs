@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using TMPro;
+using Unity.VisualScripting;
 
 public class PlayerAbility : MonoBehaviour
 {
@@ -21,9 +22,6 @@ public class PlayerAbility : MonoBehaviour
     [Space]
     public float reverseControlEffectTime;
     [Space]
-    public float shieldEffectTime;
-    public bool isShieldActive;
-    [Space]
     public float RocketEffectTime;
     public float RocketPower;
     [Space]
@@ -38,7 +36,7 @@ public class PlayerAbility : MonoBehaviour
     }
     void Start()
     {
-        Ability = "Invinsible";
+        Ability = null;
         playerModelSprite = transform.GetChild(0).GetComponent<SpriteRenderer>().sprite;
         abilityNameText = transform.Find("PlayerModel/UICanvas/AbilityNameText")?.GetComponent<TMP_Text>();
 
@@ -54,140 +52,121 @@ public class PlayerAbility : MonoBehaviour
 
     public void useAbility()
     {
-        Debug.Log(Ability + " Used");
         switch (Ability)
         {
             case "Blind":
-                photonView.RPC("ApplyBlindEffect", RpcTarget.All);
+                photonView.RPC("BlindEffect", RpcTarget.Others);
                 break;
             case "Slow":
-                photonView.RPC("ApplySlowEffect", RpcTarget.Others);
+                photonView.RPC("SlowEffect", RpcTarget.Others);
                 break;
             case "Reverse Control":
-                photonView.RPC("ApplyReverseControlEffect", RpcTarget.Others);
-                break;
-            case "ShieldPlayer":
-                photonView.RPC("ShieldPlayerAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
+                photonView.RPC("ReverseControlEffect", RpcTarget.Others);
                 break;
             case "Rocket":
-                photonView.RPC("RocketAbility", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
+                photonView.RPC("RocketEffect", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
                 break;
             case "Speed":
-                photonView.RPC("ApplySpeedAbility", RpcTarget.Others);
+                photonView.RPC("SpeedEffect", RpcTarget.Others);
                 break;
             case "Invinsible":
-                photonView.RPC("ApplyInvinsibleEffect", RpcTarget.Others);
+                photonView.RPC("InvinsibleEffect", RpcTarget.Others);
                 break;
             default:
                 return;
         }
-        Ability = null;
         ResetAbiliyUI();
     }
+    public void SetTextAbility(string Ability)
+    {
+        abilityNameText.text = Ability;
+    }
+
     public void ResetAbiliyUI()
     {
         Ability = null;
         if (abilityNameText != null)
         {
-            abilityNameText.text = "Empty";
+            abilityNameText.text = null;
         }
     }
 #region Blind
     [PunRPC]
-    public IEnumerator ApplyBlindEffect()
+    public void BlindEffect()
     {
-        Ability = null;
-        if (!photonView.IsMine)
+        if(photonView.IsMine)
         {
-            GameObject blindPanel1 = new GameObject("BlindPanel1");
-            Canvas canvas = transform.Find("PlayerModel/BlindEffectCanvas").GetComponent<Canvas>();
-            if (canvas != null)
-            {
-                blindPanel1.transform.SetParent(canvas.transform, false);
-                RectTransform rt1 = blindPanel1.AddComponent<RectTransform>();
-                rt1.sizeDelta = new Vector2(Screen.width, Screen.height);
-            }
-
-            CanvasRenderer cr1 = blindPanel1.AddComponent<CanvasRenderer>();
-            Image img1 = blindPanel1.AddComponent<Image>();
-            img1.color = new Color(0, 0, 0, 0.94f);
-
-            yield return new WaitForSeconds(blindEffectTime);
-
-            Destroy(blindPanel1);
+            StartCoroutine(ApplyBlindEffect());
         }
+    }
+    IEnumerator ApplyBlindEffect()
+    {
+        GameObject blindPanel1 = new GameObject("BlindPanel1");
+        Canvas canvas = transform.Find("PlayerModel/BlindEffectCanvas").GetComponent<Canvas>();
+        if (canvas != null)
+        {
+            blindPanel1.transform.SetParent(canvas.transform, false);
+            RectTransform rt1 = blindPanel1.AddComponent<RectTransform>();
+            rt1.sizeDelta = new Vector2(Screen.width, Screen.height);
+        }
+
+        CanvasRenderer cr1 = blindPanel1.AddComponent<CanvasRenderer>();
+        Image img1 = blindPanel1.AddComponent<Image>();
+        img1.color = new Color(0, 0, 0, 0.94f);
+
+        yield return new WaitForSeconds(blindEffectTime);
+
+        Destroy(blindPanel1);
     }
     #endregion
 #region Slow
     [PunRPC]
-    public IEnumerator ApplySlowEffect()
+    public void SlowEffect()
     {
-        Ability = null;
-
         PlayerMovement[] playerMovements = Object.FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
 
-        foreach (PlayerMovement playerMovement in playerMovements)
+        foreach(PlayerMovement playerMovement in playerMovements)
         {
-
-            if (playerMovement.GetComponent<PhotonView>().IsMine)
+            if(playerMovement != null && playerMovement.GetComponent<PhotonView>().IsMine)
             {
-                if (playerMovement != null)
-                {
-                    playerMovement.moveSpeed *= 0.5f;
-
-                    yield return new WaitForSeconds(slowEffectTime);
-
-                    playerMovement.moveSpeed = 350;
-                }
+                StartCoroutine(ApplySlowEffect(playerMovement));
             }
         }
+    }
+    IEnumerator ApplySlowEffect(PlayerMovement playerMovement)
+    {
+        playerMovement.moveSpeed *= 0.5f;
+
+        yield return new WaitForSeconds(slowEffectTime);
+
+        playerMovement.moveSpeed = 350;
     }
 #endregion
 #region ReverseControl
     [PunRPC]
-    public IEnumerator ApplyReverseControlEffect()
+    public void ReverseControlEffect()
     {
-        Ability = null;
-
         PlayerMovement[] playerMovements = Object.FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
-
         foreach (PlayerMovement playerMovement in playerMovements)
         {
-
-            if (playerMovement.GetComponent<PhotonView>().IsMine)
+            if (playerMovement != null && playerMovement.GetComponent<PhotonView>().IsMine)
             {
-                if (playerMovement != null)
-                {
-                    playerMovement.isReversed = true;
-
-                    yield return new WaitForSeconds(slowEffectTime);
-
-                    playerMovement.isReversed = false;
-                }
+                StartCoroutine(ApplyReverseControlEffect(playerMovement));
             }
         }
     }
-    #endregion
-#region ShieldPlayer
-    [PunRPC]
-    public void ShieldPlayerAbility(int actorNumber)
+    IEnumerator ApplyReverseControlEffect(PlayerMovement playerMovement)
     {
-        if (photonView.Owner.ActorNumber != actorNumber) return;
+        playerMovement.moveSpeed *= -1;
 
-        StartCoroutine(ApplyShieldPlayerEffect());
-    }
-    IEnumerator ApplyShieldPlayerEffect()
-    {
-        isShieldActive = true;
+        yield return new WaitForSeconds(MuchSpeedEffectTime);
 
-        yield return new WaitForSeconds(shieldEffectTime);
-
-        isShieldActive = false;
+        playerMovement.moveSpeed *= -1;
     }
     #endregion
 #region Rocket
     [PunRPC]
-    private void RocketAbility(int actorNumber)
+    public void RocketEffect(int actorNumber)
     {
         if (photonView.Owner.ActorNumber != actorNumber) return;
 
@@ -215,52 +194,50 @@ public class PlayerAbility : MonoBehaviour
     #endregion
 #region Speed
     [PunRPC]
-    public IEnumerator ApplySpeedAbility()
+    public void SpeedEffect()
     {
-        Ability = null;
-
         PlayerMovement[] playerMovements = Object.FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
 
         foreach (PlayerMovement playerMovement in playerMovements)
         {
-            if (playerMovement.GetComponent<PhotonView>().IsMine)
+            if (playerMovement != null && playerMovement.GetComponent<PhotonView>().IsMine)
             {
-                if (playerMovement != null)
-                {
-                    playerMovement.moveSpeed *= 1.4f;
-                    yield return new WaitForSeconds(MuchSpeedEffectTime);
-
-                    playerMovement.moveSpeed = 350;
-                }
+                StartCoroutine(ApplySpeedAbility(playerMovement));
             }
         }
+    }
+    public IEnumerator ApplySpeedAbility(PlayerMovement playerMovement)
+    {
+        playerMovement.moveSpeed *= 1.4f;
+        yield return new WaitForSeconds(MuchSpeedEffectTime);
+
+        playerMovement.moveSpeed = 350;
     }
     #endregion
 #region Invinsible
     [PunRPC]
-    IEnumerator ApplyInvinsibleEffect()
+    public void InvinsibleEffect()
     {
-        Ability = null;
-
         PlayerMovement[] playerMovements = Object.FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
 
-        foreach(PlayerMovement playerMovement in playerMovements)
+        foreach (PlayerMovement playerMovement in playerMovements)
         {
-            if(playerMovement.GetComponent<PhotonView>().IsMine)
+            if (playerMovement != null && playerMovement.GetComponent<PhotonView>().IsMine)
             {
-                if (playerMovement != null)
-                {
-                    GameObject playerModel = transform.GetChild(0).gameObject;
-                    if(playerModel != null)
-                    {
-                        playerModel.GetComponent<SpriteRenderer>().sprite = null;
-
-                        yield return new WaitForSeconds(InvinsibleEffectTime);
-
-                        playerModel.GetComponent<SpriteRenderer>().sprite = playerModelSprite;
-                    }
-                }
+                StartCoroutine(ApplyInvinsibleEffect());
             }
+        }
+    }
+    IEnumerator ApplyInvinsibleEffect()
+    {
+        GameObject playerModel = transform.GetChild(0).gameObject;
+        if (playerModel != null)
+        {
+            playerModel.GetComponent<SpriteRenderer>().sprite = null;
+
+            yield return new WaitForSeconds(InvinsibleEffectTime);
+
+            playerModel.GetComponent<SpriteRenderer>().sprite = playerModelSprite;
         }
     }
 }
