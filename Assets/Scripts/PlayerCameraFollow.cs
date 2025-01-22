@@ -16,10 +16,10 @@ public class PlayerCameraFollow : MonoBehaviour
         
         if (photonView.IsMine)
         {
-          
             Camera.main.transform.SetParent(transform);
             Camera.main.transform.localPosition = offset; 
             Camera.main.transform.localRotation = Quaternion.identity;
+            Camera.main.orthographicSize = 8;
         }
     }
 }

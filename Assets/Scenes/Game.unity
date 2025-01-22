@@ -338,7 +338,6 @@ MonoBehaviour:
   XValueChange: 2.4
   minimumY: 2
   maximumY: 2
-  platformGap: 2.3
 --- !u!4 &363369574
 Transform:
   m_ObjectHideFlags: 0

@@ -9,7 +9,7 @@ public class PlayerAbility : MonoBehaviour
 {
     PhotonView photonView;
     [Header("Settings")]
-    [HideInInspector] public string Ability;
+    /*[HideInInspector]*/ public string Ability;
     private TMP_Text abilityNameText;
     private bool isRocketFinish;
 
@@ -37,7 +37,6 @@ public class PlayerAbility : MonoBehaviour
     void Start()
     {
         Ability = null;
-        playerModelSprite = transform.GetChild(0).GetComponent<SpriteRenderer>().sprite;
         abilityNameText = transform.Find("PlayerModel/UICanvas/AbilityNameText")?.GetComponent<TMP_Text>();
 
     }
@@ -94,9 +93,14 @@ public class PlayerAbility : MonoBehaviour
     [PunRPC]
     public void BlindEffect()
     {
-        if(photonView.IsMine)
+        PlayerMovement[] playerMovements = Object.FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
+
+        foreach (PlayerMovement playerMovement in playerMovements)
         {
-            StartCoroutine(ApplyBlindEffect());
+            if (playerMovement != null && playerMovement.GetComponent<PhotonView>().IsMine)
+            {
+                StartCoroutine(ApplyBlindEffect());
+            }
         }
     }
     IEnumerator ApplyBlindEffect()
@@ -218,26 +222,27 @@ public class PlayerAbility : MonoBehaviour
     [PunRPC]
     public void InvinsibleEffect()
     {
-        PlayerMovement[] playerMovements = Object.FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
+        PhotonView[] photonViews = Object.FindObjectsByType<PhotonView>(FindObjectsSortMode.None);
 
-        foreach (PlayerMovement playerMovement in playerMovements)
+        foreach (PhotonView photonView in photonViews)
         {
-            if (playerMovement != null && playerMovement.GetComponent<PhotonView>().IsMine)
+            if (photonView != null && photonView.IsMine)
             {
-                StartCoroutine(ApplyInvinsibleEffect());
+                StartCoroutine(ApplyInvinsibleEffect(photonView));
             }
         }
     }
-    IEnumerator ApplyInvinsibleEffect()
+    IEnumerator ApplyInvinsibleEffect(PhotonView photonView)
     {
-        GameObject playerModel = transform.GetChild(0).gameObject;
+        GameObject playerModel = photonView.gameObject;
         if (playerModel != null)
         {
-            playerModel.GetComponent<SpriteRenderer>().sprite = null;
+            SpriteRenderer playerSprite = playerModel.transform.GetChild(0).GetComponent<SpriteRenderer>();
+            playerSprite.enabled = false;
 
             yield return new WaitForSeconds(InvinsibleEffectTime);
 
-            playerModel.GetComponent<SpriteRenderer>().sprite = playerModelSprite;
+            playerSprite.enabled = true;
         }
     }
 }
