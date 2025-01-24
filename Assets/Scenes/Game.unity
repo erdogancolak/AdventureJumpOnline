@@ -332,7 +332,7 @@ MonoBehaviour:
   jumperPrefab: {fileID: 2919388992624922782, guid: 86c74c7db5a8f3f49b463eb82e69c73e, type: 3}
   movedPrefab: {fileID: 8653445776443457448, guid: 137b1267371c0004da9266bfcae1b566, type: 3}
   cyclePrefab: {fileID: 2919388992624922782, guid: 30f94f718de78944f855983e19b4d0d2, type: 3}
-  stunPrefab: {fileID: 2919388992624922782, guid: b8688f1e6d5f0f44eaae1a316d7aecb8, type: 3}
+  stunPrefab: {fileID: 2919388992624922782, guid: 0a297e0c334df974683002b1aa5e5b58, type: 3}
   collectAbilityPrefab: {fileID: 361206406461094186, guid: 13068dd0032464d4cb08310ec0ecec46, type: 3}
   platformCount: 30
   XValueChange: 2.4

@@ -1,5 +1,6 @@
 using UnityEngine;
 using Photon.Pun;
+using System.Collections;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Settings")]
     public float moveSpeed;
+    public float stunTime;
     void Start()
     {
         view = GetComponent<PhotonView>();
@@ -36,6 +38,21 @@ public class PlayerMovement : MonoBehaviour
         float sideWalk = Input.GetAxisRaw("Horizontal");
 
         rb.linearVelocity = new Vector2(sideWalk * moveSpeed * Time.deltaTime, rb.linearVelocity.y);
+    }
+    public void Stun()
+    {
+        if(view.IsMine)
+        {
+            StartCoroutine(StunIE());
+        }
+    }
+    IEnumerator StunIE()
+    {
+        moveSpeed = 0;
+
+        yield return new WaitForSeconds(stunTime);
+
+        moveSpeed = 350;
     }
 }
 

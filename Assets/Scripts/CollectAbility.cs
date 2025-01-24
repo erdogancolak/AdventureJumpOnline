@@ -17,32 +17,32 @@ public class CollectAbility : MonoBehaviour
         PhotonView photonView = collision.GetComponent<PhotonView>();
         PlayerAbility playerAbility = collision.GetComponent<PlayerAbility>();
 
-        if (playerAbility != null && playerAbility.Ability == null && photonView != null && photonView.IsMine)
+        if (playerAbility != null && playerAbility.currentAbility == PlayerAbility.abilities.Empty && photonView != null && photonView.IsMine)
         {
             int randomAbility = Random.Range(0, abilityCount);
 
             switch (randomAbility)
             {
                 case 0:
-                    playerAbility.Ability = "Slow";
+                    playerAbility.currentAbility = PlayerAbility.abilities.Blind;
                     break;
                 case 1:
-                    playerAbility.Ability = "Speed";
+                    playerAbility.currentAbility = PlayerAbility.abilities.Slow;
                     break;
                 case 2:
-                    playerAbility.Ability = "Reverse Control";
+                    playerAbility.currentAbility = PlayerAbility.abilities.Reverse;
                     break;
                 case 3:
-                    playerAbility.Ability = "Rocket";
+                    playerAbility.currentAbility = PlayerAbility.abilities.Speed;
                     break;
                 case 4:
-                    playerAbility.Ability = "Blind";
+                    playerAbility.currentAbility = PlayerAbility.abilities.Invinsible;
                     break;
                 case 5:
-                    playerAbility.Ability = "Invinsible";
+                    playerAbility.currentAbility = PlayerAbility.abilities.Rocket;
                     break;
             }
-            playerAbility.SetTextAbility(playerAbility.Ability);
+            playerAbility.SetTextAbility(playerAbility.currentAbility.ToString());
 
             RespawnAbility();
         }

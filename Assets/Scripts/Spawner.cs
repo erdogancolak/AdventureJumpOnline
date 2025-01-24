@@ -69,6 +69,8 @@ public class Spawner : MonoBehaviourPun
                 return movedPrefab;
             case 4:
                 return cyclePrefab;
+            case 5:
+                return stunPrefab;
             default:
                 return defaultPrefab;
         }

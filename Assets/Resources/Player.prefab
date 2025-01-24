@@ -180,7 +180,7 @@ Rigidbody2D:
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 3.3
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 7bc5091856a59674a831a7ea30ada210, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -261,6 +261,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerModel: {fileID: 522684985292980067}
   moveSpeed: 350
+  stunTime: 3
 --- !u!114 &-9028032448506175238
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -286,7 +287,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46b2ee44da6097247b784e58ca31ed0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Ability: 
+  currentAbility: 0
   blindEffectTime: 5
   slowEffectTime: 10
   reverseControlEffectTime: 10

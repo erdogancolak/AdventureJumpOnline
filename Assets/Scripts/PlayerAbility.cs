@@ -9,9 +9,12 @@ public class PlayerAbility : MonoBehaviour
 {
     PhotonView photonView;
     [Header("Settings")]
-    /*[HideInInspector]*/ public string Ability;
     private TMP_Text abilityNameText;
+    [HideInInspector] public enum abilities { Empty, Blind, Slow, Reverse, Speed, Invinsible, Rocket }
+    public abilities currentAbility;
+
     private bool isRocketFinish;
+    
 
     [Space]
 
@@ -36,14 +39,16 @@ public class PlayerAbility : MonoBehaviour
     }
     void Start()
     {
-        Ability = null;
+        currentAbility = abilities.Empty;
+
         abilityNameText = transform.Find("PlayerModel/UICanvas/AbilityNameText")?.GetComponent<TMP_Text>();
+        SetTextAbility(currentAbility.ToString());
 
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.U) && Ability != null)
+        if (Input.GetKeyDown(KeyCode.U) && currentAbility != abilities.Empty)
         {
             useAbility();
         }
@@ -51,24 +56,26 @@ public class PlayerAbility : MonoBehaviour
 
     public void useAbility()
     {
-        switch (Ability)
+        Debug.Log(currentAbility + " Used");
+        switch (currentAbility)
         {
-            case "Blind":
+            case abilities.Blind:
+                Debug.Log("Blind");
                 photonView.RPC("BlindEffect", RpcTarget.Others);
                 break;
-            case "Slow":
+            case abilities.Slow:
                 photonView.RPC("SlowEffect", RpcTarget.Others);
                 break;
-            case "Reverse Control":
+            case abilities.Reverse:
                 photonView.RPC("ReverseControlEffect", RpcTarget.Others);
                 break;
-            case "Rocket":
+            case abilities.Rocket:
                 photonView.RPC("RocketEffect", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
                 break;
-            case "Speed":
+            case abilities.Speed:
                 photonView.RPC("SpeedEffect", RpcTarget.Others);
                 break;
-            case "Invinsible":
+            case abilities.Invinsible:
                 photonView.RPC("InvinsibleEffect", RpcTarget.Others);
                 break;
             default:
@@ -83,10 +90,12 @@ public class PlayerAbility : MonoBehaviour
 
     public void ResetAbiliyUI()
     {
-        Ability = null;
+        Debug.Log("Reset");
+        currentAbility = abilities.Empty;
         if (abilityNameText != null)
         {
-            abilityNameText.text = null;
+            abilityNameText.text = "";
+            abilityNameText.text = currentAbility.ToString();
         }
     }
 #region Blind
