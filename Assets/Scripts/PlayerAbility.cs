@@ -142,7 +142,8 @@ public class PlayerAbility : MonoBehaviour
         {
             if(playerMovement != null && playerMovement.GetComponent<PhotonView>().IsMine)
             {
-                StartCoroutine(ApplySlowEffect(playerMovement));
+                //StartCoroutine(ApplySlowEffect(playerMovement));
+                StartCoroutine(ChangeSpeed(playerMovement, 0.5f, slowEffectTime));
             }
         }
     }
@@ -164,7 +165,8 @@ public class PlayerAbility : MonoBehaviour
         {
             if (playerMovement != null && playerMovement.GetComponent<PhotonView>().IsMine)
             {
-                StartCoroutine(ApplyReverseControlEffect(playerMovement));
+                //StartCoroutine(ApplyReverseControlEffect(playerMovement));
+                StartCoroutine(ChangeSpeed(playerMovement, -1f, reverseControlEffectTime));
             }
         }
     }
@@ -187,10 +189,12 @@ public class PlayerAbility : MonoBehaviour
     }
     IEnumerator ApplyRocketAbilityEffect()
     {
+        Collider2D col = GetComponent<Collider2D>();
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        if (rb != null && !isRocketFinish)
+        if (rb != null && isRocketFinish)
         {
-            isRocketFinish = true;
+            col.enabled = false;
+            isRocketFinish = false;
             float originalGravity = rb.gravityScale;
             Vector2 originalVelocity = rb.linearVelocity;
 
@@ -199,7 +203,8 @@ public class PlayerAbility : MonoBehaviour
 
             yield return new WaitForSeconds(RocketEffectTime);
 
-            isRocketFinish = false;
+            col.enabled = true;
+            isRocketFinish = true;
             rb.gravityScale = originalGravity;
             rb.linearVelocity = originalVelocity;
         }
@@ -215,7 +220,8 @@ public class PlayerAbility : MonoBehaviour
         {
             if (playerMovement != null && playerMovement.GetComponent<PhotonView>().IsMine)
             {
-                StartCoroutine(ApplySpeedAbility(playerMovement));
+                //StartCoroutine(ApplySpeedAbility(playerMovement));
+                StartCoroutine(ChangeSpeed(playerMovement, 1.4f, MuchSpeedEffectTime));
             }
         }
     }
@@ -254,5 +260,15 @@ public class PlayerAbility : MonoBehaviour
             playerSprite.enabled = true;
         }
     }
+    #endregion
+    IEnumerator ChangeSpeed(PlayerMovement playerMovement,float changeSpeedFloat,float effectTime)
+    {
+        playerMovement.moveSpeed *= changeSpeedFloat;
+
+        yield return new WaitForSeconds(changeSpeedFloat);
+
+        playerMovement.moveSpeed = 350;
+    }
 }
-#endregion
+
+
