@@ -19,7 +19,7 @@ public class PlayerCameraFollow : MonoBehaviour
             Camera.main.transform.SetParent(transform);
             Camera.main.transform.localPosition = offset; 
             Camera.main.transform.localRotation = Quaternion.identity;
-            Camera.main.orthographicSize = 8;
+            Camera.main.orthographicSize = 4;
         }
     }
 }

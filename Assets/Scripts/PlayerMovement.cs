@@ -17,10 +17,6 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         view = GetComponent<PhotonView>();
-        if(view.IsMine)
-        {
-            playerModel.GetComponent<SpriteRenderer>().color = Color.red;
-        }
     }
 
     void FixedUpdate()
