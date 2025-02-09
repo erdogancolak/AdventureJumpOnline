@@ -63,6 +63,10 @@ MonoBehaviour:
   - RocketEffect
   - SpeedEffect
   - InvinsibleEffect
+  - startGame
+  - setTimeScale
+  - UpdateGameStartText
+  - DestroyGameStartText
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

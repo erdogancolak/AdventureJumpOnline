@@ -9,7 +9,7 @@ public class PlayerCameraFollow : MonoBehaviour
     public Vector3 offset; 
     
 
-    void Start()
+    void Awake()
     {
         photonView = GetComponent<PhotonView>();
 

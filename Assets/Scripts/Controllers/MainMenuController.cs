@@ -47,6 +47,11 @@ public class MainMenuController: MonoBehaviourPunCallbacks
             Debug.Log("Player Name is Empty");
         }
     }
+
+    public void JoinRoomInList(string RoomName)
+    {
+        PhotonNetwork.JoinRoom(RoomName);
+    }
     public override void OnJoinedRoom()
     {
         PhotonNetwork.LoadLevel("Game");

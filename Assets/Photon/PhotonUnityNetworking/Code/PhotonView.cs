@@ -321,6 +321,8 @@ namespace Photon.Pun
             }
         }
 
+        public static bool IsMasterClient { get; set; }
+
         [FormerlySerializedAs("instantiationId")]
         public int InstantiationId; // if the view was instantiated with a GO, this GO has a instantiationID (first view's viewID)
 

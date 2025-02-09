@@ -30,7 +30,8 @@ public class Spawner : MonoBehaviourPun
                 spawnLocate.x = Random.Range(-XValueChange, XValueChange);
                 spawnLocate.y += Random.Range(minimumY, maximumY);
 
-                GameObject platform = PhotonNetwork.Instantiate(selectedPrefab.name, spawnLocate, Quaternion.identity);
+                GameObject platform = PhotonNetwork.InstantiateRoomObject(selectedPrefab.name, spawnLocate, Quaternion.identity);
+
             }
             StartCoroutine(PlatformSpawner());
         }
@@ -48,7 +49,8 @@ public class Spawner : MonoBehaviourPun
                 spawnLocate.x = Random.Range(-XValueChange, XValueChange);
                 spawnLocate.y += Random.Range(minimumY, maximumY);
 
-                GameObject platform = PhotonNetwork.Instantiate(selectedPrefab.name, spawnLocate, Quaternion.identity);
+                GameObject platform = PhotonNetwork.InstantiateRoomObject(selectedPrefab.name, spawnLocate, Quaternion.identity);
+
                 if (randomNumber == 20 || randomNumber == 21)
                 {
                     SpawnAbilityOnPlatform(platform);

@@ -3,13 +3,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using TMPro;
-using Unity.VisualScripting;
 
 public class PlayerAbility : MonoBehaviour
 {
     PhotonView photonView;
     [Header("Settings")]
     private TMP_Text abilityNameText;
+    private TMP_Text useAbilityText;
+    private TMP_Text nicknameText;
     [HideInInspector] public enum abilities { Empty, Blind, Slow, Reverse, Speed, Invinsible, Rocket }
     public abilities currentAbility;
 
@@ -42,13 +43,16 @@ public class PlayerAbility : MonoBehaviour
         currentAbility = abilities.Empty;
 
         abilityNameText = transform.Find("PlayerModel/UICanvas/AbilityNameText")?.GetComponent<TMP_Text>();
-        SetTextAbility(currentAbility.ToString());
+        useAbilityText = transform.Find("PlayerModel/UICanvas/useAbilityText")?.GetComponent<TMP_Text>();
+        nicknameText = transform.Find("PlayerModel/UICanvas/PlayerNickname")?.GetComponent<TMP_Text>();
+        SetTextAbility(currentAbility.ToString() , false);
+        SetNickname(PhotonNetwork.NickName);
 
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.U) && currentAbility != abilities.Empty)
+        if (Input.GetKeyDown(KeyCode.E) && currentAbility != abilities.Empty)
         {
             useAbility();
         }
@@ -56,11 +60,9 @@ public class PlayerAbility : MonoBehaviour
 
     public void useAbility()
     {
-        Debug.Log(currentAbility + " Used");
         switch (currentAbility)
         {
             case abilities.Blind:
-                Debug.Log("Blind");
                 photonView.RPC("BlindEffect", RpcTarget.Others);
                 break;
             case abilities.Slow:
@@ -68,9 +70,6 @@ public class PlayerAbility : MonoBehaviour
                 break;
             case abilities.Reverse:
                 photonView.RPC("ReverseControlEffect", RpcTarget.Others);
-                break;
-            case abilities.Rocket:
-                photonView.RPC("RocketEffect", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
                 break;
             case abilities.Speed:
                 photonView.RPC("SpeedEffect", RpcTarget.Others);
@@ -83,19 +82,20 @@ public class PlayerAbility : MonoBehaviour
         }
         ResetAbiliyUI();
     }
-    public void SetTextAbility(string Ability)
+    public void SetTextAbility(string Ability , bool useAbilityTextBool)
     {
         abilityNameText.text = Ability;
+        useAbilityText.enabled = useAbilityTextBool;
     }
 
     public void ResetAbiliyUI()
     {
-        Debug.Log("Reset");
         currentAbility = abilities.Empty;
         if (abilityNameText != null)
         {
             abilityNameText.text = "";
             abilityNameText.text = currentAbility.ToString();
+            useAbilityText.enabled = false;
         }
     }
 #region Blind
@@ -179,37 +179,6 @@ public class PlayerAbility : MonoBehaviour
         playerMovement.moveSpeed *= -1;
     }
     #endregion
-#region Rocket
-    [PunRPC]
-    public void RocketEffect(int actorNumber)
-    {
-        if (photonView.Owner.ActorNumber != actorNumber) return;
-
-        StartCoroutine(ApplyRocketAbilityEffect());
-    }
-    IEnumerator ApplyRocketAbilityEffect()
-    {
-        Collider2D col = GetComponent<Collider2D>();
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        if (rb != null && isRocketFinish)
-        {
-            col.enabled = false;
-            isRocketFinish = false;
-            float originalGravity = rb.gravityScale;
-            Vector2 originalVelocity = rb.linearVelocity;
-
-            rb.gravityScale = 0;
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, RocketPower);
-
-            yield return new WaitForSeconds(RocketEffectTime);
-
-            col.enabled = true;
-            isRocketFinish = true;
-            rb.gravityScale = originalGravity;
-            rb.linearVelocity = originalVelocity;
-        }
-    }
-    #endregion
 #region Speed
     [PunRPC]
     public void SpeedEffect()
@@ -265,9 +234,17 @@ public class PlayerAbility : MonoBehaviour
     {
         playerMovement.moveSpeed *= changeSpeedFloat;
 
-        yield return new WaitForSeconds(changeSpeedFloat);
+        yield return new WaitForSeconds(effectTime);
 
         playerMovement.moveSpeed = 350;
+    }
+
+    private void SetNickname(string playerNickname)
+    {
+        if(playerNickname != null)
+        {
+            nicknameText.text = playerNickname;
+        }
     }
 }
 

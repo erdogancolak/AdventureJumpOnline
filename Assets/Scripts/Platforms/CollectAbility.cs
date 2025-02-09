@@ -38,11 +38,8 @@ public class CollectAbility : MonoBehaviour
                 case 4:
                     playerAbility.currentAbility = PlayerAbility.abilities.Invinsible;
                     break;
-                case 5:
-                    playerAbility.currentAbility = PlayerAbility.abilities.Rocket;
-                    break;
             }
-            playerAbility.SetTextAbility(playerAbility.currentAbility.ToString());
+            playerAbility.SetTextAbility(playerAbility.currentAbility.ToString() , true);
 
             RespawnAbility();
         }

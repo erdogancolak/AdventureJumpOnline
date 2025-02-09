@@ -14,9 +14,19 @@ public class PlayerMovement : MonoBehaviour
     [Header("Settings")]
     public float moveSpeed;
     public float stunTime;
-    void Start()
+    void Awake()
     {
         view = GetComponent<PhotonView>();
+    }
+
+    private void Start()
+    {
+        if(!view.IsMine)
+        {
+            Color newColor = playerModel.GetComponent<SpriteRenderer>().color;
+            newColor.a = 100f / 255f;
+            playerModel.GetComponent<SpriteRenderer>().color = newColor;
+        }
     }
 
     void FixedUpdate()
@@ -30,10 +40,28 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Movement()
     {
+        Animator animator = transform.GetChild(0).GetComponent<Animator>();
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         float sideWalk = Input.GetAxisRaw("Horizontal");
 
         rb.linearVelocity = new Vector2(sideWalk * moveSpeed * Time.deltaTime, rb.linearVelocity.y);
+
+        animator.SetBool("isRun", true);
+
+        if (sideWalk == 0)
+        {
+            animator.SetBool("isRun", false);
+        }
+        Vector2 newScale = transform.GetChild(0).localScale;
+        if (sideWalk < 0)
+        {
+            newScale.x = -1;
+        }
+        if (sideWalk > 0)
+        {
+            newScale.x = 1;
+        }
+        transform.GetChild(0).localScale = newScale;
     }
     public void Stun()
     {
@@ -48,7 +76,7 @@ public class PlayerMovement : MonoBehaviour
 
         yield return new WaitForSeconds(stunTime);
 
-        moveSpeed = 350;
+        moveSpeed = 200;
     }
 }
 
