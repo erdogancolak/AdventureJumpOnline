@@ -150,6 +150,7 @@ GameObject:
   - component: {fileID: 7089680175992126244}
   - component: {fileID: -9028032448506175238}
   - component: {fileID: 2771735627909042747}
+  - component: {fileID: 4037375094720701113}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -342,6 +343,19 @@ MonoBehaviour:
   RocketPower: 17
   MuchSpeedEffectTime: 10
   InvinsibleEffectTime: 10
+--- !u!114 &4037375094720701113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2624200308779640046}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 377fac86be0792e43a8d6a07925defc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fallThreshold: -40
 --- !u!1 &3575968353236389964
 GameObject:
   m_ObjectHideFlags: 0
