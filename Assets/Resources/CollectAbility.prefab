@@ -149,6 +149,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a69334c3986534e4b9bbe8c088b81c9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioClip: {fileID: 8300000, guid: 5c0a78ab33b73b64dafb62da5516756a, type: 3}
+  sfxVolume: 0.8
   abilityCount: 5
   respawnTime: 5
 --- !u!114 &-2095779830000904320

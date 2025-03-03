@@ -28,13 +28,9 @@ public class MainMenuController: MonoBehaviourPunCallbacks
         {
             RoomOptions roomOptions = new RoomOptions();
             roomOptions.MaxPlayers = maxPlayer;
+            LobbyController.lobbyCode = createInput.text;
             PhotonNetwork.CreateRoom(createInput.text, roomOptions);
         }
-        else
-        {
-            Debug.Log("Player Name is Empty");
-        }
-        
     }
     public void JoinRoom()
     {

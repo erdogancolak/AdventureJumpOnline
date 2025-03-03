@@ -1,12 +1,15 @@
 using UnityEngine;
 using Photon.Pun;
+using TMPro;
 
 public class PlayerFall : MonoBehaviourPunCallbacks
 {
-    public float fallThreshold = -10f;  // Düþüþ hýzý eþiði
+    [Header("References")]
     private Rigidbody2D rb;
-    
+    public TMP_Text deadText;
 
+    [Header("Values")]
+    public float fallThreshold;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -14,7 +17,6 @@ public class PlayerFall : MonoBehaviourPunCallbacks
 
     void Update()
     {
-        // Eðer oyuncunun Y hýzý belirli bir eþik deðerinin altýna düþerse, oyuncu ölür
         if (rb.linearVelocity.y < fallThreshold)
         {
             Die();
@@ -23,8 +25,7 @@ public class PlayerFall : MonoBehaviourPunCallbacks
 
     void Die()
     {
-        Debug.Log("Oyuncu öldü!");
-
+        deadText.text = "<color=red>You Dead</color>";
     }
 }
 

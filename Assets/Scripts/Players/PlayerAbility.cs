@@ -7,15 +7,21 @@ using TMPro;
 public class PlayerAbility : MonoBehaviour
 {
     PhotonView photonView;
-    [Header("Settings")]
+
+    [Header("SFX")]
+    public AudioClip audioClip;
+    public AudioClip getAbilityAudioClip;
+    public float sfxVolume;
+
+    [Header("UI")]
     private TMP_Text abilityNameText;
     private TMP_Text useAbilityText;
     private TMP_Text nicknameText;
-    [HideInInspector] public enum abilities { Empty, Blind, Slow, Reverse, Speed, Invinsible, Rocket }
-    public abilities currentAbility;
-
-    private bool isRocketFinish;
     
+    [HideInInspector] public enum abilities { Empty, Blind, Slow, Reverse, Speed, Invisible, Rocket }
+
+    [Header("Settings")]
+    public abilities currentAbility;
 
     [Space]
 
@@ -26,13 +32,9 @@ public class PlayerAbility : MonoBehaviour
     [Space]
     public float reverseControlEffectTime;
     [Space]
-    public float RocketEffectTime;
-    public float RocketPower;
-    [Space]
     public float MuchSpeedEffectTime;
     [Space]
-    public float InvinsibleEffectTime;
-    Sprite playerModelSprite;
+    public float InvisibleEffectTime;
 
     private void Awake()
     {
@@ -74,12 +76,13 @@ public class PlayerAbility : MonoBehaviour
             case abilities.Speed:
                 photonView.RPC("SpeedEffect", RpcTarget.Others);
                 break;
-            case abilities.Invinsible:
-                photonView.RPC("InvinsibleEffect", RpcTarget.Others);
+            case abilities.Invisible:
+                photonView.RPC("InvisibleEffect", RpcTarget.Others);
                 break;
             default:
                 return;
         }
+        GetComponent<PlayerSFX>().PlaySFX(audioClip, sfxVolume);
         ResetAbiliyUI();
     }
     public void SetTextAbility(string Ability , bool useAbilityTextBool)
@@ -114,6 +117,7 @@ public class PlayerAbility : MonoBehaviour
     }
     IEnumerator ApplyBlindEffect()
     {
+        GetAbilitySFX();
         GameObject blindPanel1 = new GameObject("BlindPanel1");
         Canvas canvas = transform.Find("PlayerModel/BlindEffectCanvas").GetComponent<Canvas>();
         if (canvas != null)
@@ -142,19 +146,11 @@ public class PlayerAbility : MonoBehaviour
         {
             if(playerMovement != null && playerMovement.GetComponent<PhotonView>().IsMine)
             {
-                //StartCoroutine(ApplySlowEffect(playerMovement));
                 StartCoroutine(ChangeSpeed(playerMovement, 0.5f, slowEffectTime));
             }
         }
     }
-    IEnumerator ApplySlowEffect(PlayerMovement playerMovement)
-    {
-        playerMovement.moveSpeed *= 0.5f;
 
-        yield return new WaitForSeconds(slowEffectTime);
-
-        playerMovement.moveSpeed = 350;
-    }
 #endregion
 #region ReverseControl
     [PunRPC]
@@ -165,18 +161,9 @@ public class PlayerAbility : MonoBehaviour
         {
             if (playerMovement != null && playerMovement.GetComponent<PhotonView>().IsMine)
             {
-                //StartCoroutine(ApplyReverseControlEffect(playerMovement));
                 StartCoroutine(ChangeSpeed(playerMovement, -1f, reverseControlEffectTime));
             }
         }
-    }
-    IEnumerator ApplyReverseControlEffect(PlayerMovement playerMovement)
-    {
-        playerMovement.moveSpeed *= -1;
-
-        yield return new WaitForSeconds(MuchSpeedEffectTime);
-
-        playerMovement.moveSpeed *= -1;
     }
     #endregion
 #region Speed
@@ -189,22 +176,14 @@ public class PlayerAbility : MonoBehaviour
         {
             if (playerMovement != null && playerMovement.GetComponent<PhotonView>().IsMine)
             {
-                //StartCoroutine(ApplySpeedAbility(playerMovement));
                 StartCoroutine(ChangeSpeed(playerMovement, 1.4f, MuchSpeedEffectTime));
             }
         }
     }
-    public IEnumerator ApplySpeedAbility(PlayerMovement playerMovement)
-    {
-        playerMovement.moveSpeed *= 1.4f;
-        yield return new WaitForSeconds(MuchSpeedEffectTime);
-
-        playerMovement.moveSpeed = 350;
-    }
     #endregion
-#region Invinsible
+#region Invisible
     [PunRPC]
-    public void InvinsibleEffect()
+    public void InvisibleEffect()
     {
         PhotonView[] photonViews = Object.FindObjectsByType<PhotonView>(FindObjectsSortMode.None);
 
@@ -212,19 +191,20 @@ public class PlayerAbility : MonoBehaviour
         {
             if (photonView != null && photonView.IsMine)
             {
-                StartCoroutine(ApplyInvinsibleEffect(photonView));
+                StartCoroutine(ApplyInvisibleEffect(photonView));
             }
         }
     }
-    IEnumerator ApplyInvinsibleEffect(PhotonView photonView)
+    IEnumerator ApplyInvisibleEffect(PhotonView photonView)
     {
+        GetAbilitySFX();
         GameObject playerModel = photonView.gameObject;
         if (playerModel != null)
         {
             SpriteRenderer playerSprite = playerModel.transform.GetChild(0).GetComponent<SpriteRenderer>();
             playerSprite.enabled = false;
 
-            yield return new WaitForSeconds(InvinsibleEffectTime);
+            yield return new WaitForSeconds(InvisibleEffectTime);
 
             playerSprite.enabled = true;
         }
@@ -232,11 +212,12 @@ public class PlayerAbility : MonoBehaviour
     #endregion
     IEnumerator ChangeSpeed(PlayerMovement playerMovement,float changeSpeedFloat,float effectTime)
     {
+        GetAbilitySFX();
         playerMovement.moveSpeed *= changeSpeedFloat;
 
         yield return new WaitForSeconds(effectTime);
 
-        playerMovement.moveSpeed = 350;
+        playerMovement.moveSpeed = 200;
     }
 
     private void SetNickname(string playerNickname)
@@ -245,6 +226,12 @@ public class PlayerAbility : MonoBehaviour
         {
             nicknameText.text = playerNickname;
         }
+    }
+
+    public void GetAbilitySFX()
+    {
+        GetComponent<PlayerSFX>().PlaySFX(getAbilityAudioClip, sfxVolume);
+        Debug.Log("Test");
     }
 }
 

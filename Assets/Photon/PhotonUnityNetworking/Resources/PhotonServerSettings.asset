@@ -67,6 +67,7 @@ MonoBehaviour:
   - setTimeScale
   - UpdateGameStartText
   - DestroyGameStartText
+  - InvisibleEffect
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

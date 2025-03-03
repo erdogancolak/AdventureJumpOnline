@@ -192,6 +192,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcd5515098cf1b14c8d78c57d884a9de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioClip: {fileID: 0}
+  sfxVolume: 0
   jumpPower: 12
   destroyFloat: 30
 --- !u!114 &6580545465485425614
@@ -206,5 +208,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06ace26a3174d9b41b91ce8d3906ae3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioClip: {fileID: 8300000, guid: d0324f6132ea73c4ca95a60285d38871, type: 3}
+  sfxVolume: 0.75
   stunTime: 3
   woodenPlatformSprite: {fileID: 3156592210487214440, guid: b66b2ead835382e4a9b201f75f8f1416, type: 3}

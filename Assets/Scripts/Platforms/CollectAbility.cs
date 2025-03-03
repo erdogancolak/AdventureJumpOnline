@@ -7,6 +7,10 @@ using UnityEngine.UI;
 
 public class CollectAbility : MonoBehaviour
 {
+    [Header("SFX")]
+    public AudioClip audioClip;
+    public float sfxVolume;
+
     [Header("Settings")]
     public int abilityCount;
 
@@ -36,9 +40,11 @@ public class CollectAbility : MonoBehaviour
                     playerAbility.currentAbility = PlayerAbility.abilities.Speed;
                     break;
                 case 4:
-                    playerAbility.currentAbility = PlayerAbility.abilities.Invinsible;
+                    playerAbility.currentAbility = PlayerAbility.abilities.Invisible;
                     break;
             }
+            collision.GetComponent<PlayerSFX>().PlaySFX(audioClip,sfxVolume);
+
             playerAbility.SetTextAbility(playerAbility.currentAbility.ToString() , true);
 
             RespawnAbility();

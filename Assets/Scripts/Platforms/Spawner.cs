@@ -5,9 +5,12 @@ using Photon.Pun;
 
 public class Spawner : MonoBehaviourPun
 {
-    [Header("References")]
+    [Header("Platforms")]
     public GameObject defaultPrefab, jumperPrefab, movedPrefab, cyclePrefab, stunPrefab;
+
     [Space]
+
+    [Header("Settings")]
     public GameObject collectAbilityPrefab;
     private GameObject selectedPrefab;
 
@@ -15,7 +18,6 @@ public class Spawner : MonoBehaviourPun
     [SerializeField] private int platformCount;
     [SerializeField] private float XValueChange;
     [SerializeField] private float minimumY, maximumY;
-    //[SerializeField] private float platformGap;
 
     private Vector3 spawnLocate;
     private int randomNumber;
@@ -77,22 +79,6 @@ public class Spawner : MonoBehaviourPun
                 return defaultPrefab;
         }
     }
-
-    //private void SpawnOppositePlatform(Vector3 originalPosition)
-    //{
-    //    Vector3 oppositeSpawnLocate = originalPosition;
-    //    oppositeSpawnLocate.x = -originalPosition.x;
-    //    if (originalPosition.x > 0)
-    //    {
-    //        oppositeSpawnLocate.x -= platformGap;
-    //    }
-    //    else if (originalPosition.x < 0)
-    //    {
-    //        oppositeSpawnLocate.x += platformGap;
-    //    }
-    //    PhotonNetwork.Instantiate(defaultPrefab.name, oppositeSpawnLocate, Quaternion.identity);
-    //}
-
     private void SpawnAbilityOnPlatform(GameObject platform)
     {
         if(platform != null)

@@ -5,8 +5,15 @@ using TMPro;
 
 public class LobbyController : MonoBehaviourPunCallbacks
 {
+    [Header("Player List")]
     public Transform playerListContainer;
     public GameObject playerNamePrefab;
+
+    [Space]
+
+    [Header("Lobby Code")]
+    public TMP_Text lobbyCodeText;
+    public static string lobbyCode;
 
     void Start()
     {
@@ -16,6 +23,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
 
     void UpdatePlayerList()
     {
+        lobbyCodeText.text = "<color=white>Lobby Code : </color><color=red>" + lobbyCode + "</color>";
         foreach (Transform child in playerListContainer)
         {
             Destroy(child.gameObject);

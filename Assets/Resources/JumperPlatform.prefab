@@ -168,6 +168,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcd5515098cf1b14c8d78c57d884a9de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioClip: {fileID: 8300000, guid: 00248e5d31e54324893af97d00c0f029, type: 3}
+  sfxVolume: 1
   jumpPower: 17
   destroyFloat: 30
 --- !u!114 &5535044113122293673
